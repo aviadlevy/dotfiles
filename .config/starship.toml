@@ -1,0 +1,25 @@
+# ~/.config/starship.toml
+
+add_newline = false
+
+[line_break]
+disabled = true
+
+[battery]
+full_symbol = "🔋 "
+charging_symbol = "⚡️ "
+discharging_symbol = "💀 "
+
+[character]
+success_symbol = "[➜](bold green) "
+error_symbol = "[✗](bold red) "
+
+[cmd_duration]
+disabled = true
+
+[package]
+disabled = true
+
+[kubernetes]
+disabled = false
+format = '[$symbol$context( \($namespace\))]($style) '
