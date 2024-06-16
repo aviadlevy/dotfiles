@@ -1,6 +1,6 @@
 #! /bin/zsh
 
-DOTFILES=(.zshrc .kubectl_aliases .config/starship.toml)
+DOTFILES=(.zshrc .kubectl_aliases .vimrc .config/starship.toml)
 
 for dotfile in $(echo ${DOTFILES[*]});
 do
