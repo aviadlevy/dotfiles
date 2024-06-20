@@ -1,5 +1,5 @@
 import = [
-    "~/.config/alacritty/themes/themes/night_owl.toml"
+    "~/.config/alacritty/themes/night_owl.toml"
 ]
 
 [window]
