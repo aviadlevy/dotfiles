@@ -5,7 +5,7 @@ ZSH_THEME="robbyrussell"
 ENABLE_CORRECTION="true"
 
 
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting zsh-completions sudo copypath copyfile jsontools helm)
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting zsh-completions sudo copypath copyfile jsontools)
 autoload -U compinit && compinit
 
 FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
@@ -14,7 +14,9 @@ source $ZSH/oh-my-zsh.sh
 export EDITOR='vim'
 
 # enable after installing starship - https://starship.rs/
-#eval "$(starship init zsh)"
+# eval "$(starship init zsh)"
+# in case you prefer powerlevel10k - https://github.com/romkatv/powerlevel10k?tab=readme-ov-file#oh-my-zsh
+# source $HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme
 
 bindkey "^[[H" beginning-of-line
 bindkey "^[[F" end-of-line
