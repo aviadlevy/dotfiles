@@ -5,9 +5,7 @@ import = [
 [window]
 padding.x = 10
 padding.y = 10
-
 #decorations = "Buttonless"
-
 opacity = 0.8
 blur = true
 
@@ -15,3 +13,5 @@ blur = true
 normal.family = "MesloLGS Nerd Font Mono"
 size = 17
 
+[selection]
+save_to_clipboard = true
