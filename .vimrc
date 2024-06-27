@@ -12,7 +12,7 @@ Plug 'junegunn/fzf.vim'
 
 " Insert mode completion
 imap <c-k> <plug>(fzf-complete-word)
-imap <c-f> <plug>(fzf-complete-path)
+inoremap <expr> <c-f> fzf#vim#complete#path('fd --hidden --strip-cwd-prefix --exclude .git')
 imap <c-l> <plug>(fzf-complete-line)
 
 call plug#end()
