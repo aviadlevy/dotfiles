@@ -2,8 +2,6 @@
 export ZSH="$HOME/.oh-my-zsh"
 
 ZSH_THEME="robbyrussell"
-ENABLE_CORRECTION="true"
-
 
 plugins=(git zsh-autosuggestions zsh-syntax-highlighting zsh-completions sudo copypath copyfile jsontools)
 autoload -U compinit && compinit
