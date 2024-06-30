@@ -1,7 +1,10 @@
 # enable after installing starship - https://starship.rs/
 # eval "$(starship init zsh)"
+#
 # in case you prefer powerlevel10k - https://github.com/romkatv/powerlevel10k?tab=readme-ov-file#oh-my-zsh
-# source $HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme
+# then replace with the latter line
+# ZSH_THEME="powerlevel10k/powerlevel10k"
+ZSH_THEME="robbyrussell"
 
 
 # After installing fzf, fd, bat, git-delta, eza
