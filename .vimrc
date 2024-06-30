@@ -15,4 +15,10 @@ imap <c-k> <plug>(fzf-complete-word)
 inoremap <expr> <c-f> fzf#vim#complete#path('fd --hidden --strip-cwd-prefix --exclude .git')
 imap <c-l> <plug>(fzf-complete-line)
 
+if has('nvim') || has('patch-8.0.902')
+  Plug 'mhinz/vim-signify'
+else
+  Plug 'mhinz/vim-signify', { 'tag': 'legacy' }
+endif
+
 call plug#end()
