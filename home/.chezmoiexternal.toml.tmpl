@@ -49,6 +49,10 @@
         "*/.gitignore",
     ]
 
+[".fzf-git.sh/fzf-git.sh"]
+    type = "file"
+    url = "https://raw.githubusercontent.com/junegunn/fzf-git.sh/main/fzf-git.sh"
+
 {{- $powerlevel10kVersionTag := (gitHubLatestRelease "romkatv/powerlevel10k").TagName }}
 [".oh-my-zsh/custom/themes/powerlevel10k"]
     type = "archive"

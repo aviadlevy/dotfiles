@@ -26,7 +26,7 @@ _fzf_compgen_dir() {
 
 
 # Use fzf-git from https://github.com/junegunn/fzf-git.sh.git
-source ~/fzf-git.sh/fzf-git.sh
+source ~/.fzf-git.sh/fzf-git.sh
 
 # ---- Eza (better ls) -----
 
