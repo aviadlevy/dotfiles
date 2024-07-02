@@ -12,7 +12,10 @@ command -v brew >/dev/null 2>&1 || \
 	(echo '🍺  Installing Homebrew' && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 	
 command -v brew >/dev/null 2>&1 || \
-	(echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /root/.bashrc);  (eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"; source ~/.bashrc)
+	(echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /root/.bashrc);
+
+command -v brew >/dev/null 2>&1 || \
+	eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 
 # Copy Brewfile
