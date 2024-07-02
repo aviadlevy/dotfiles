@@ -1,6 +1,10 @@
+{{- $work := promptBoolOnce . "work" "Work computer?"  -}}
 {{- $email := promptStringOnce . "email" "Email address" -}}
 {{- $username := promptStringOnce . "username" "Username" -}}
 
 [data]
-    email = {{ $email | quote }}
-    username = {{ $username | quote }}
+	email = {{ $email | quote }}
+	username = {{ $username | quote }}
+	uname_arch = {{ output "uname" "-m" | trim | quote}}
+	work = {{ $work }}
+	zshPlugins = ["git", "zsh-autosuggestions", "zsh-syntax-highlighting",  "zsh-completions", "sudo", "copypath", "copyfile", "jsontools"]
