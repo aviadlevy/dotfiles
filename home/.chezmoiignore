@@ -7,14 +7,3 @@
 .oh-my-zsh/plugins/**
 .oh-my-zsh/templates/**
 .oh-my-zsh/custom/themes/powerlevel10k/**/*.zwc
-
-.config/git/cookies
-.gnupg
-.gnupg/**
-.inputrc
-.oh-my-zsh
-.oh-my-zsh/**
-.p10k.zsh
-.ssh/id_rsa
-.ssh/id_rsa.pub
-.zprofile
