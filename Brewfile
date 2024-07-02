@@ -1,0 +1,7 @@
+tap "homebrew/bundle"
+brew "bat"
+brew "chezmoi"
+brew "eza"
+brew "fd"
+brew "fzf"
+brew "git-delta"

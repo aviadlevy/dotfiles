@@ -1,6 +1,6 @@
-#[user] # don't use personal user by default in case it's work environment
-#	name = aviadlevy
-#	email = aviadlevy1@gmail.com
+[user] # don't use personal user by default in case it's work environment
+	name = {{ .username }}
+	email = {{ .email }}
 
 [core]
     pager = delta
