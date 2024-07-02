@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eufo pipefail
+set -efo pipefail
 
 # Install Homebrew
 command -v brew >/dev/null 2>&1 || \
