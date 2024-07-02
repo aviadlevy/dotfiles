@@ -12,7 +12,11 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting zsh-completions sudo copypath copyfile jsontools)
+plugins=(
+{{- range .zshPlugins }}
+  {{ . }}
+{{- end }}
+)
 autoload -U compinit && compinit
 
 FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
@@ -30,8 +34,8 @@ alias o="open ." # Open the current directory in Finder
 [ -f ~/.kubectl_aliases ] && source ~/.kubectl_aliases
 function kubectl() { echo "+ kubectl $@">&2; command kubectl $@; }
 
-source .programlangrc
-source .customterminalrc
+source ~/.programlangrc
+source ~/.customterminalrc
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
