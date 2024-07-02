@@ -7,3 +7,5 @@ Collection of my essential configuration files for easy setup and customization 
 - Run `install.sh`
 - Sometime you'll need to run `source ~/.bashrc` to reload
 - Install Brewfile - `brew bundle install`
+- Run chezmoi init - `chezmoi init https://github.com/aviadlevy/dotfiles.git`
+- Run `chezmoi apply`
