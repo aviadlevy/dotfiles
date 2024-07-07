@@ -16,3 +16,5 @@ inoremap <expr> <c-f> fzf#vim#complete#path('fd --hidden --strip-cwd-prefix --ex
 imap <c-l> <plug>(fzf-complete-line)
 
 call plug#end()
+
+set number
