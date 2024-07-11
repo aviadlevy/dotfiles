@@ -16,6 +16,6 @@ eval "$(pyenv init -)"
 {{ if eq .chezmoi.os "linux-ubuntu" }}
 complete -C '/usr/local/bin/aws_completer' aws
 {{ else }}
-complete -C '/usr/local/bin/aws_completer' aws
+complete -C '/opt/homebrew/bin/aws_completer' aws
 {{ end }}
 {{ end }}
