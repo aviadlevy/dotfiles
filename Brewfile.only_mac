@@ -1,0 +1,5 @@
+cask "alacritty"
+cask "font-meslo-lg-nerd-font"
+cask "hiddenbar"
+cask "notion"
+cask "rectangle"
