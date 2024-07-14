@@ -1,8 +1,8 @@
 # After installing fzf, fd, bat, git-delta, eza
 # run the following command:
 # brew install fzf fd bat git-delta eza
+{{- if lookPath "fzf" }}
 # ---- FZF -----
-
 # Set up fzf key bindings and fuzzy completion
 eval "$(fzf --zsh)"
 
@@ -24,10 +24,12 @@ _fzf_compgen_dir() {
   fd --type=d --hidden --exclude .git . "$1"
 }
 
+{{ end -}}
 
 # Use fzf-git from https://github.com/junegunn/fzf-git.sh.git
 source ~/.fzf-git.sh/fzf-git.sh
 
+{{- if lookPath "eza" }}
 # ---- Eza (better ls) -----
 
 alias ls="eza --color=always --git --no-filesize --icons=always --no-time --no-user --no-permissions"
@@ -37,7 +39,9 @@ show_file_or_dir_preview="if [ -d {} ]; then eza --tree --color=always {} | head
 
 export FZF_CTRL_T_OPTS="--preview '$show_file_or_dir_preview'"
 export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
+{{ end -}}
 
+{{- if lookPath "fzf" }}
 # Advanced customization of fzf options via _fzf_comprun function
 # - The first argument to the function is the name of the command.
 # - You should make sure to pass the rest of the arguments to fzf.
@@ -52,5 +56,12 @@ _fzf_comprun() {
     *)            fzf --preview "$show_file_or_dir_preview" "$@" ;;
   esac
 }
+{{ end -}}
 
+{{- if lookPath "bat" }}
 alias cat=bat
+{{ end -}}
+
+{{- if lookPath "zoxide" }}
+eval "$(zoxide init zsh)"
+{{ end -}}
