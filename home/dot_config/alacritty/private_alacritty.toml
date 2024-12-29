@@ -1,6 +1,3 @@
-import = [
-    "~/.config/alacritty/themes/night_owl.toml"
-]
 
 [window]
 padding.x = 10
@@ -15,3 +12,8 @@ size = 17
 
 [selection]
 save_to_clipboard = true
+
+[general]
+import = [
+    "~/.config/alacritty/themes/night_owl.toml"
+]
