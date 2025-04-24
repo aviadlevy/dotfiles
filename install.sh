@@ -7,10 +7,10 @@ command -v brew >/dev/null 2>&1 || \
 	(echo '🍺  Installing Homebrew' && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 	
 command -v brew >/dev/null 2>&1 || \
-	(echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> ~/.bashrc);
+	(echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> ~/.bashrc);
 
 command -v brew >/dev/null 2>&1 || \
-	eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+	eval "$(/opt/homebrew/bin/brew shellenv)"
 
 source ~/.bashrc
 
