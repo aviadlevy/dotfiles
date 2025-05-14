@@ -7,4 +7,4 @@ copy-on-select = true
 theme = nightowl
 background-blur-radius = 20
 confirm-close-surface = false
-macos-titlebar-style = hidden
+copy-on-select = clipboard
