@@ -63,6 +63,7 @@ alias cat=bat
 {{ end -}}
 
 {{- if lookPath "zoxide" }}
+export _ZO_DOCTOR=0
 eval "$(zoxide init zsh)"
 alias cd=z
 {{ end -}}

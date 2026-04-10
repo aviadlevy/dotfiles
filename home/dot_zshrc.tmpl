@@ -49,6 +49,9 @@ alias o="open ." # Open the current directory in Finder
 [ -f ~/.kubectl_aliases ] && source ~/.kubectl_aliases
 function kubectl() { echo "+ kubectl $@">&2; command kubectl $@; }
 
+[ -f ~/.env.jira ] && source ~/.env.jira
+[ -f ~/.env.slack ] && source ~/.env.slack
+
 source ~/.programlangrc
 source ~/.customterminalrc
 
