@@ -51,6 +51,7 @@ function kubectl() { echo "+ kubectl $@">&2; command kubectl $@; }
 
 [ -f ~/.env.jira ] && source ~/.env.jira
 [ -f ~/.env.slack ] && source ~/.env.slack
+[ -f ~/.env.personal ] && source ~/.env.personal
 
 source ~/.programlangrc
 source ~/.customterminalrc

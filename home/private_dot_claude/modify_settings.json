@@ -1,0 +1,47 @@
+#!/bin/sh
+# Merges personal Claude Code preferences into the existing settings.json,
+# preserving anything plugins/Claude wrote. Reads stdin, writes stdout.
+jq '
+  .model = "opus"
+  | .permissions.defaultMode = "auto"
+  | .effortLevel = "high"
+  | .autoMemoryEnabled = true
+  | .autoDreamEnabled = true
+  | .skipDangerousModePermissionPrompt = true
+  | .autoCompactEnabled = false
+  | .remoteControlAtStartup = true
+  | .agentPushNotifEnabled = true
+  | .skipAutoPermissionPrompt = true
+  | .voiceEnabled = true
+  | .statusLine = {
+      "type": "command",
+      "command": "npx -y ccstatusline@latest",
+      "padding": 0
+    }
+  | .enabledPlugins["context7@claude-plugins-official"] = true
+  | .enabledPlugins["superpowers@claude-plugins-official"] = true
+  | .permissions.allow = ((.permissions.allow // []) + [
+      "Bash(git log*)",
+      "Bash(git diff*)",
+      "Bash(git status*)",
+      "Bash(git branch*)",
+      "Bash(git show*)",
+      "Bash(git remote*)",
+      "Bash(git checkout*)",
+      "Bash(git add*)",
+      "Bash(git commit*)",
+      "Bash(git worktree*)",
+      "Bash(ls*)",
+      "Bash(echo*)",
+      "Bash(which*)",
+      "Bash(env*)",
+      "Bash(file *)",
+      "Bash(tail *)",
+      "Bash(chezmoi diff*)",
+      "Bash(chezmoi data*)",
+      "Bash(chezmoi source-path*)",
+      "Bash(docker pull*)",
+      "Bash(docker restart:*)",
+      "Bash(docker logs:*)"
+    ] | unique)
+'

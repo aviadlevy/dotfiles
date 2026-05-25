@@ -55,6 +55,10 @@ play = [
 	{ run = 'mpv --force-window %*', orphan = true, for = "windows" },
 	{ run = '''mediainfo "$1"; echo "Press enter to exit"; read _''', block = true, desc = "Show media info", for = "unix" },
 ]
+browser = [
+    { run = 'xdg-open "$@"', desc = "Open in Browser", for = "linux" },
+    { run = 'open "$@"', desc = "Open in Browser", for = "macos" } 
+]
 
 [open]
 rules = [
@@ -71,6 +75,8 @@ rules = [
 	# JSON
 	{ mime = "application/{json,ndjson}", use = [ "edit", "reveal" ] },
 	{ mime = "*/javascript", use = [ "edit", "reveal" ] },
+        # HTML
+        { mime = "text/html", use = [ "browser", "edit" ] },
 	# Empty file
 	{ mime = "inode/empty", use = [ "edit", "reveal" ] },
 	# Fallback
