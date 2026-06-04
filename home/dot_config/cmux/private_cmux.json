@@ -1,0 +1,11 @@
+{
+  "$schema": "https://raw.githubusercontent.com/manaflow-ai/cmux/main/web/data/cmux.schema.json",
+  "schemaVersion": 1,
+  "browser": {
+    "openTerminalLinksInCmuxBrowser": true,
+    "interceptTerminalOpenCommandInCmuxBrowser": true,
+    "urlsToAlwaysOpenExternally": [
+      "re:^https?://([^/]+\\.)?gitlab\\.com(?:[:/]|$)"
+    ]
+  }
+}

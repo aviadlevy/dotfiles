@@ -26,3 +26,8 @@
 
 [rerere]
      enabled = true
+{{ $crMachineId := output "sh" "-c" "git config --global --get coderabbit.machineId 2>/dev/null || true" | trim -}}
+{{ if $crMachineId -}}
+[coderabbit]
+	machineId = {{ $crMachineId }}
+{{ end -}}
