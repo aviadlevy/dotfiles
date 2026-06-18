@@ -62,6 +62,7 @@ Before sending, refine the message to be **concise and journal-ready**. Yoram co
 - **Up to 2 short sentences. Hard cap.** If it doesn't fit, cut it.
 - **Highlight-only**: what shipped, decided, or discovered — never the play-by-play
 - **Context-tagged**: ticket IDs, repo names, people, key decisions when they matter
+- **No ephemeral identifiers**: never include merge-request / pull-request numbers (e.g. `!42`, `#123`). They're meaningless in a long-term journal. Jira ticket IDs and repo names are fine.
 - **Precise and factual**: no filler, no hedging, no pleasantries
 - **Present tense**: "Merged auth refactor" not "I just finished merging the auth refactor"
 
