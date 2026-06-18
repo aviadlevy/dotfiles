@@ -46,4 +46,12 @@ jq '
       "Bash(docker restart:*)",
       "Bash(docker logs:*)"
     ] | unique)
+  | .hooks = (.hooks // {})
+  | .hooks.PostToolUse = (
+      (.hooks.PostToolUse // []) as $pt
+      | if any($pt[]?.hooks[]?; .command == "{{ .chezmoi.homeDir }}/.claude/skills/yoram/yoram-nudge.sh")
+        then $pt
+        else $pt + [{"matcher":"Bash","hooks":[{"type":"command","command":"{{ .chezmoi.homeDir }}/.claude/skills/yoram/yoram-nudge.sh"}]}]
+        end
+    )
 '
