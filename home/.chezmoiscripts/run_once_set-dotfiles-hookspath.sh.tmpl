@@ -1,0 +1,5 @@
+#!/bin/sh
+# Point this dotfiles repo's git at the tracked .githooks/ so the commit-msg hook
+# (strips Claude attribution trailers) runs on this machine. Idempotent.
+repo=$(git -C "{{ .chezmoi.sourceDir }}" rev-parse --show-toplevel 2>/dev/null) || exit 0
+git -C "$repo" config core.hooksPath "$repo/.githooks"

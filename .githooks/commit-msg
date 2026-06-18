@@ -1,0 +1,7 @@
+#!/bin/sh
+# Strip Claude Code attribution trailers from commit messages in this dotfiles repo,
+# regardless of which machine or working directory triggered the commit.
+# Wired in per machine via core.hooksPath (set by the chezmoi run_once bootstrap).
+msg="$1"
+sed -i.bak -E '/^Co-[Aa]uthored-[Bb]y:.*[Cc]laude/d; /^Claude-Session:/d' "$msg"
+rm -f "$msg.bak"
