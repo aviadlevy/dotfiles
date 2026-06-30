@@ -4,7 +4,7 @@
 # Permission mode is per-machine (chezmoi `work` var): auto on the work laptop,
 # ask-every-time ("default") on the home laptop.
 jq '
-  .model = "opus"
+  del(.model)
   | .permissions.defaultMode = "{{ if .work }}auto{{ else }}default{{ end }}"
   | .effortLevel = "high"
   | .autoMemoryEnabled = true

@@ -33,12 +33,13 @@ if ! "$TAILSCALE" status &>/dev/null; then
     echo "Error: Tailscale failed to connect after 15s" >&2
     exit 1
   fi
+  sleep 2 # let the tunnel/routes settle before the request
 fi
 
-payload=$(jq -n --arg t "$msg" '{text: $t}')
+payload=$(jq -n --arg t "$msg" --arg d "$(date +%F)" '{text: $t, date: $d}')
 
 curl -sS --fail \
-  --connect-timeout 5 --max-time 15 \
+  --connect-timeout 10 --max-time 20 \
   -H "X-Token: ${WORK_LAPTOP_TOKEN}" \
   -H "Content-Type: application/json" \
   --data "$payload" \
