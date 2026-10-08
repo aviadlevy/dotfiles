@@ -5,7 +5,7 @@ Run by the one-shot cron `ship` arms in its last step. Inputs: `<IID>` (the MR) 
 prompt with the values filled in:
 
 ```
-Auto-review round <ROUND> of 2 on MR !<IID>: follow ~/.claude/skills/ship/review-round.md.
+Auto-review round <ROUND> of 2 on MR !<IID>: follow ~/.agents/skills/ship/review-round.md.
 ```
 
 ## Steps

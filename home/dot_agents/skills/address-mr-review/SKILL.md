@@ -74,7 +74,7 @@ CMD = re.compile(r"^\s*@(coderabbit|baz)", re.I)  # bot commands, not findings
 # Bot bookkeeping: walkthrough, review-status, scan results. Read them, never reply in them.
 NOISE = ("summarize by coderabbit.ai", "comment by coderabbit for review status",
          "actionable comments posted:", "review_stack_entry_start")
-# Company bots: each `review.noise_markers` entry from ~/.claude/work-profile/work-profile.md,
+# Company bots: each `review.noise_markers` entry from ~/.agents/work-profile/work-profile.md,
 # when that file exists. No profile → leave EXTRA empty.
 EXTRA = ()
 NOISE += EXTRA

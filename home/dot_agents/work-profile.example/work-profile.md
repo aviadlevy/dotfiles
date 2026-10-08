@@ -1,6 +1,6 @@
 # Work profile — <company>
 
-Template. Copy this directory to `~/.claude/work-profile/` and fill every `<placeholder>`.
+Template. Copy this directory to `~/.agents/work-profile/` and fill every `<placeholder>`.
 Skills refer to each value by its dotted **key** (`ship` stops when the profile is missing;
 `address-mr-review` runs with its built-in markers only).
 

@@ -1,0 +1,39 @@
+#!/bin/bash
+# ~/.agents/skills is the shared skills directory most agents read natively. This links
+# into it, and out of it for Claude Code, which only reads ~/.claude/skills:
+#   work machines: each work skill → ~/.agents/skills, the work profile → ~/.agents/work-profile
+#   every machine: each ~/.agents/skills skill → ~/.claude/skills
+set -euo pipefail
+agents="$HOME/.agents/skills"
+claude="$HOME/.claude/skills"
+
+link() {
+  local source="$1" target="$2"
+  if [ -e "$target" ] && [ ! -L "$target" ]; then
+    echo "link-skills: $target is a real path, skipping" >&2
+    return
+  fi
+  ln -sfn "$source" "$target"
+}
+
+link_skills() {
+  local from="$1" to="$2" dir
+  for dir in "$from"/*/; do
+    if [ -f "$dir/SKILL.md" ] || [ -f "$dir/skill.md" ]; then
+      link "${dir%/}" "$to/$(basename "$dir")"
+    fi
+  done
+}
+
+prune_dangling() {
+  find "$1" -maxdepth 1 -type l ! -exec test -e {} \; -print -delete
+}
+
+mkdir -p "$agents" "$claude"
+{{- if .work }}
+link_skills "$HOME/my-work-skills" "$agents"
+link "$HOME/my-work-skills/work-profile" "$HOME/.agents/work-profile"
+{{- end }}
+link_skills "$agents" "$claude"
+prune_dangling "$agents"
+prune_dangling "$claude"

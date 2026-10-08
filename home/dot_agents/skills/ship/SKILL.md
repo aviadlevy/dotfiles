@@ -15,10 +15,10 @@ diff and the ticket.
 
 **On a failed command**, print the error and ask: abort or continue?
 
-**Company values** come from the work profile, `~/.claude/work-profile/work-profile.md`. Read
+**Company values** come from the work profile, `~/.agents/work-profile/work-profile.md`. Read
 it before Step 1; values below appear as its dotted keys (`jira.server`, `mr.target_branch`,
-…). When the file is missing, stop: "No work profile at `~/.claude/work-profile/` — copy
-`~/.claude/work-profile.example/` there and fill it in."
+…). When the file is missing, stop: "No work profile at `~/.agents/work-profile/` — copy
+`~/.agents/work-profile.example/` there and fill it in."
 
 ---
 
@@ -181,7 +181,7 @@ Arm both, then finish; neither blocks.
    notifies on success). Note the cron ID.
 2. **Review rounds** — one-shot `CronCreate` (`recurring: false`), 3 minutes out:
    ```
-   Auto-review round 1 of 2 on MR !<IID>: follow ~/.claude/skills/ship/review-round.md.
+   Auto-review round 1 of 2 on MR !<IID>: follow ~/.agents/skills/ship/review-round.md.
    ```
 
 Tell the user both job IDs, and that the crons are **session-only**: they die with this

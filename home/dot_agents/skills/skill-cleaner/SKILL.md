@@ -12,26 +12,26 @@ Audit Claude Code skills loaded into the system prompt: rendered token cost, dup
 1. Run the analyzer:
 
 ```bash
-node --experimental-strip-types ~/.claude/skills/skill-cleaner/scripts/skill-cleaner.ts --months 3
+node --experimental-strip-types ~/.agents/skills/skill-cleaner/scripts/skill-cleaner.ts --months 3
 ```
 
 Useful variants:
 
 ```bash
 # Skip log scanning (much faster, drops "Unused candidates" section)
-node --experimental-strip-types ~/.claude/skills/skill-cleaner/scripts/skill-cleaner.ts --no-logs
+node --experimental-strip-types ~/.agents/skills/skill-cleaner/scripts/skill-cleaner.ts --no-logs
 
 # Wider log window + larger cap
-node --experimental-strip-types ~/.claude/skills/skill-cleaner/scripts/skill-cleaner.ts --months 6 --max-log-mb 800
+node --experimental-strip-types ~/.agents/skills/skill-cleaner/scripts/skill-cleaner.ts --months 6 --max-log-mb 800
 
 # Treat skill metadata as filling a specific share of context
-node --experimental-strip-types ~/.claude/skills/skill-cleaner/scripts/skill-cleaner.ts --context-tokens 200000 --budget-percent 2
+node --experimental-strip-types ~/.agents/skills/skill-cleaner/scripts/skill-cleaner.ts --context-tokens 200000 --budget-percent 2
 
 # Add an extra skill root (e.g. a project's .claude/skills)
-node --experimental-strip-types ~/.claude/skills/skill-cleaner/scripts/skill-cleaner.ts --root ~/code/myproj/.claude/skills
+node --experimental-strip-types ~/.agents/skills/skill-cleaner/scripts/skill-cleaner.ts --root ~/code/myproj/.claude/skills
 
 # JSON output for piping into jq
-node --experimental-strip-types ~/.claude/skills/skill-cleaner/scripts/skill-cleaner.ts --json
+node --experimental-strip-types ~/.agents/skills/skill-cleaner/scripts/skill-cleaner.ts --json
 ```
 
 2. Read the report in this order:

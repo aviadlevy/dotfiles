@@ -29,11 +29,11 @@ If the user provided a file path, use it directly. Otherwise, help locate the fi
 Run the mlx-stt skill to transcribe the audio. The model auto-detects the language.
 
 ```bash
-bash /Users/aviadlevy/.claude/skills/mlx-stt/install.sh
+bash ~/.agents/skills/mlx-stt/install.sh
 ```
 
 ```bash
-bash /Users/aviadlevy/.claude/skills/mlx-stt/mlx-stt.sh <audio_file_path>
+bash ~/.agents/skills/mlx-stt/mlx-stt.sh <audio_file_path>
 ```
 
 ### 3. Produce the Meeting Summary

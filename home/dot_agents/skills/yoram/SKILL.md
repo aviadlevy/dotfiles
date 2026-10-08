@@ -76,7 +76,7 @@ Examples (each ≤2 short sentences):
 Run the send script:
 
 ```bash
-zsh /Users/aviadlevy/.claude/skills/yoram/send.sh "<message>"
+zsh ~/.agents/skills/yoram/send.sh "<message>"
 ```
 
 **Important:** The `<message>` must be passed as a single shell-quoted argument. Escape any single quotes in the message content.
