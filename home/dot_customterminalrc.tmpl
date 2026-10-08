@@ -32,7 +32,8 @@ source ~/.fzf-git.sh/fzf-git.sh
 {{- if lookPath "eza" }}
 # ---- Eza (better ls) -----
 
-alias ls="eza --color=always --git --no-filesize --icons=always --no-time --no-user --no-permissions"
+# Agent shells (CLAUDECODE=1) keep plain ls/cat/cd: eza writes ANSI into $(...), bat hides errors, z is not cd.
+[[ -z "$CLAUDECODE" ]] && alias ls="eza --color=always --git --no-filesize --icons=always --no-time --no-user --no-permissions"
 alias ll="eza -a --color=always --long --git --icons=always --no-user"
 
 show_file_or_dir_preview="if [ -d {} ]; then eza --tree --color=always {} | head -200; else bat -n --color=always --line-range :500 {}; fi"
@@ -59,13 +60,13 @@ _fzf_comprun() {
 {{ end -}}
 
 {{- if lookPath "bat" }}
-alias cat=bat
+[[ -z "$CLAUDECODE" ]] && alias cat=bat
 {{ end -}}
 
 {{- if lookPath "zoxide" }}
 export _ZO_DOCTOR=0
 eval "$(zoxide init zsh)"
-alias cd=z
+[[ -z "$CLAUDECODE" ]] && alias cd=z
 {{ end -}}
 
 {{- if lookPath "yazi" }}
