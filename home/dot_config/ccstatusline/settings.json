@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "lines": [
     [
       {
@@ -13,12 +13,7 @@
         "color": "magenta"
       },
       {
-        "id": "7",
-        "type": "git-changes",
-        "color": "yellow"
-      },
-      {
-        "id": "daa501a3-f891-4ad7-9735-ddd9f1014e4a",
+        "id": "55334c2a-3a5d-4d37-b1ff-e908b80e2ca9",
         "type": "current-working-dir"
       }
     ],
@@ -28,36 +23,40 @@
         "type": "session-cost"
       },
       {
-        "id": "fe93f7a4-af24-46f9-8131-09849bb14823",
-        "type": "context-percentage"
-      },
+        "id": "c68c7294-61ee-46ab-82bc-20f66daf1411",
+        "type": "context-bar"
+      }
+    ],
+    [
       {
-        "id": "af7f730a-a56b-4e69-9c21-ea221cb140ca",
-        "type": "reset-timer"
-      },
-      {
-        "id": "f7d51ce1-4e7c-484a-9a78-dbbc0e4a90c1",
+        "id": "d2c6db83-3ab3-4962-b908-207023d5f3e6",
         "type": "session-usage"
       },
       {
-        "id": "ca4717be-0b86-4882-bddb-5c051a6ee866",
-        "type": "weekly-reset-timer",
-        "color": "brightMagenta"
+        "id": "48d1020e-9cdb-408f-8572-1f5d5b1077b6",
+        "type": "reset-timer",
+        "rawValue": true
       },
       {
-        "id": "83f6b4af-409f-4471-a9ab-b0019a0b8a8f",
-        "type": "weekly-usage",
-        "color": "brightBlue"
+        "id": "47d21ce7-6deb-4e1d-812f-e13cd0eb3489",
+        "type": "weekly-usage"
+      },
+      {
+        "id": "fd7a454c-91f8-457b-816f-e278c1599ce7",
+        "type": "weekly-reset-timer",
+        "rawValue": true
       }
-    ],
-    []
+    ]
   ],
   "flexMode": "full-minus-40",
   "compactThreshold": 60,
   "colorLevel": 2,
   "defaultPadding": " ",
+  "defaultPaddingSide": "both",
   "inheritSeparatorColors": false,
   "globalBold": false,
+  "gitCacheTtlSeconds": 5,
+  "minimalistMode": false,
   "powerline": {
     "enabled": false,
     "separators": [
@@ -68,7 +67,8 @@
     ],
     "startCaps": [],
     "endCaps": [],
-    "theme": "custom",
-    "autoAlign": false
+    "theme": "nord-aurora",
+    "autoAlign": false,
+    "continueThemeAcrossLines": false
   }
 }

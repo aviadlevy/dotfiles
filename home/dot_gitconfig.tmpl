@@ -31,3 +31,8 @@
 [coderabbit]
 	machineId = {{ $crMachineId }}
 {{ end -}}
+{{ if .work -}}
+# Fetch gitlab.com over SSH (covers private plugin marketplaces, e.g. org guidelines).
+[url "git@gitlab.com:"]
+	insteadOf = https://gitlab.com/
+{{ end -}}
