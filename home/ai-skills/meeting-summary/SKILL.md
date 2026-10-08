@@ -9,6 +9,7 @@ triggers:
 - "summarize this meeting ..."
 - "meeting summary ..."
 - "transcribe and summarize ..."
+disable-model-invocation: true
 ---
 
 # Meeting Summary

@@ -320,11 +320,15 @@ function discoverRoots(): string[] {
       for (const plug of fs.readdirSync(mpPath, { withFileTypes: true })) {
         if (!plug.isDirectory()) continue;
         const plugPath = path.join(mpPath, plug.name);
-        for (const ver of fs.readdirSync(plugPath, { withFileTypes: true })) {
-          if (!ver.isDirectory()) continue;
-          const skillRoot = path.join(plugPath, ver.name, "skills");
-          if (exists(skillRoot)) candidates.push(skillRoot);
-        }
+        // Only the newest cached version of a plugin is ever loaded; older
+        // version dirs are stale and would inflate the budget as phantom skills.
+        const versions = fs
+          .readdirSync(plugPath, { withFileTypes: true })
+          .filter((ver) => ver.isDirectory())
+          .map((ver) => path.join(plugPath, ver.name, "skills"))
+          .filter(exists)
+          .sort((a, b) => fs.statSync(b).mtimeMs - fs.statSync(a).mtimeMs);
+        if (versions[0]) candidates.push(versions[0]);
       }
     }
   }

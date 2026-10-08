@@ -81,9 +81,12 @@ zsh /Users/aviadlevy/.claude/skills/yoram/send.sh "<message>"
 
 **Important:** The `<message>` must be passed as a single shell-quoted argument. Escape any single quotes in the message content.
 
+**Never run `send.sh` to test it.** There is no dry-run — every invocation posts a real journal entry, including throwaway payloads like `ping`, `test`, or `ping-check`. On success the script prints `sent to Yoram: <message>`, so a successful send is never silent and there is nothing to probe for.
+
 ### 4. Report Result
 
-- On success: tell the user the message was sent to Yoram.
+- On success: the script prints `sent to Yoram: <message>` — relay that.
+- **Never re-send after a failure.** A `curl: (28)` timeout does not mean the entry was lost — the receiver commits before responding, so a retry writes a duplicate. Report the error and ask the user whether the Telegram ack arrived.
 - On failure: show the error message from the script and suggest checking:
   - Are `WORK_LAPTOP_TOKEN` and `BUTLER_HOST` set in `~/.env.personal`?
   - Is Tailscale up on the work laptop? (`tailscale status`)

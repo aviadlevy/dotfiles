@@ -1,6 +1,7 @@
 ---
 name: mlx-stt
 description: Speech-To-Text with MLX (Apple Silicon) and opensource models (default GLM-ASR-Nano-2512) locally.
+disable-model-invocation: true
 version: 1.0.7
 author: guoqiao
 metadata: {"openclaw":{"emoji":"🦞","homepage":"https://github.com/guoqiao/skills/blob/main/mlx-stt/mlx-stt/SKILL.md","os":["darwin"],"requires":{"bins":["brew"]}}}

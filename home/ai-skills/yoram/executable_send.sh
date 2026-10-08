@@ -45,3 +45,5 @@ curl -sS --fail \
   --data "$payload" \
   "http://${BUTLER_HOST}:${BUTLER_PORT}/journal" \
   > /dev/null
+
+echo "sent to Yoram: ${msg}"
