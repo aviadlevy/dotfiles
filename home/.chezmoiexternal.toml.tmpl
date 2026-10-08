@@ -94,3 +94,10 @@ url = "https://github.com/ahmetb/kubectx/raw/{{ $kubectxVersion }}/completion/_k
 
 {{ end }}
 
+
+{{- if .work }}
+["my-work-skills"]
+    type = "git-repo"
+    url = "git@gitlab.com:aviadlevy.ox/my-work-skills.git"
+    refreshPeriod = "24h"
+{{- end }}
