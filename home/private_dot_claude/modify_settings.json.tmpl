@@ -21,7 +21,7 @@ jq '
       "padding": 0
     }
   | .enabledPlugins["context7@claude-plugins-official"] = true
-  | .enabledPlugins["superpowers@claude-plugins-official"] = true
+  | .enabledPlugins["mattpocock-skills@mattpocock"] = true
   | .permissions.allow = ((.permissions.allow // []) + [
       "Bash(git log*)",
       "Bash(git diff*)",
