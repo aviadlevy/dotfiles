@@ -1,13 +1,21 @@
 {{ if .work -}}
 #!/bin/bash
-# Symlink each skill from the private work-skills repo into ~/ai-skills.
+# Link the private work-skills repo into place: each skill directory into ~/ai-skills,
+# and the work profile to ~/.claude/work-profile.
 set -euo pipefail
-for dir in "$HOME/my-work-skills"/*/; do
-  target="$HOME/ai-skills/$(basename "$dir")"
+repo="$HOME/my-work-skills"
+
+link() {
+  local source="$1" target="$2"
   if [ -e "$target" ] && [ ! -L "$target" ]; then
-    echo "link-work-skills: $target is a real directory, skipping" >&2
-    continue
+    echo "link-work-skills: $target is a real path, skipping" >&2
+    return
   fi
-  ln -sfn "${dir%/}" "$target"
+  ln -sfn "$source" "$target"
+}
+
+for dir in "$repo"/*/; do
+  [ -f "$dir/SKILL.md" ] && link "${dir%/}" "$HOME/ai-skills/$(basename "$dir")"
 done
+link "$repo/work-profile" "$HOME/.claude/work-profile"
 {{ end -}}
