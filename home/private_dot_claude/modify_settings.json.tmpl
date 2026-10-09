@@ -20,8 +20,8 @@ jq '
       "command": "npx -y ccstatusline@latest",
       "padding": 0
     }
-  | .enabledPlugins["context7@claude-plugins-official"] = true
-  | .enabledPlugins["mattpocock-skills@mattpocock"] = true
+  | .extraKnownMarketplaces = ({{ .claudeMarketplaces | toJson }} | map_values({source: {source: "github", repo: .}}))
+  | .enabledPlugins = ({{ .claudePlugins | toJson }} | map({(.): true}) | add)
   | .permissions.allow = ((.permissions.allow // []) + [
       "Bash(git log*)",
       "Bash(git diff*)",

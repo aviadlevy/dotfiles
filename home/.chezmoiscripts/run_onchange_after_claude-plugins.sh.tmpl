@@ -1,0 +1,26 @@
+#!/bin/bash
+# Reconciles user-scope Claude Code plugins with .chezmoidata/claude-plugins.yaml:
+# adds the marketplaces, installs listed plugins, uninstalls unlisted user-scope ones.
+# Local, project and org-synced plugins are left alone.
+# Reruns when the list changes: {{ list .claudeMarketplaces .claudePlugins | toJson | sha256sum }}
+set -euo pipefail
+if ! command -v claude >/dev/null; then
+  echo "claude-plugins: claude CLI not found, skipping" >&2
+  exit 0
+fi
+
+wanted=({{ range .claudePlugins }} {{ . | quote }}{{ end }})
+{{ range $name, $repo := .claudeMarketplaces }}
+claude plugin marketplace add {{ $repo | quote }}
+{{- end }}
+
+for plugin in "${wanted[@]}"; do
+  claude plugin install "$plugin"
+done
+
+claude plugin list --json | jq -r '.[] | select(.scope == "user") | .id' |
+  while read -r plugin; do
+    if [[ ! " ${wanted[*]} " =~ " $plugin " ]]; then
+      claude plugin uninstall "$plugin"
+    fi
+  done

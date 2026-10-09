@@ -1,0 +1,7 @@
+# Source of truth for user-scope Claude Code plugins. Removing a plugin here
+# uninstalls it on the next `chezmoi apply` (.chezmoiscripts/run_onchange_after_claude-plugins.sh.tmpl).
+claudeMarketplaces: # name → GitHub repo; claude-plugins-official is built in
+  mattpocock: mattpocock/skills
+claudePlugins:
+  - context7@claude-plugins-official
+  - mattpocock-skills@mattpocock
