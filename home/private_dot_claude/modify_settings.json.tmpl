@@ -3,9 +3,13 @@
 # preserving anything plugins/Claude wrote. Reads stdin, writes stdout.
 # Permission mode is per-machine (chezmoi `work` var): auto on the work laptop,
 # ask-every-time ("default") on the home laptop.
+# Claude attribution on commits and PRs is hidden at home and kept at work.
 jq '
   del(.model)
   | .permissions.defaultMode = "{{ if .work }}auto{{ else }}default{{ end }}"
+{{- if not .work }}
+  | .attribution = {"commit": "", "pr": "", "sessionUrl": false}
+{{- end }}
   | .effortLevel = "high"
   | .autoMemoryEnabled = true
   | .autoDreamEnabled = true
