@@ -9,4 +9,8 @@ The Bash tool runs **zsh**; `/bin/bash` is 3.2 (no `declare -A`).
 - A pipe stage's exit code is `${pipestatus[1]}`; `$PIPESTATUS` is always empty.
 - In scripts and `$(…)` captures, use `command ls`, `command cat`, `builtin cd`: interactive
   aliases point them at eza, bat and zoxide.
+{{- if .work }}
+- Before a `docker build` or `docker pull` of an `*.dkr.ecr.*.amazonaws.com` image, log in
+  per `aws.ecr` in `~/.agents/work-profile/work-profile.md`.
+{{- end }}
 
