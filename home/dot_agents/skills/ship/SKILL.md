@@ -7,10 +7,13 @@ description: "Use when ready to ship: opens a GitHub PR for personal repositorie
 
 ## Mode selection
 
-Use **personal mode** when `~/.agents/work-profile/work-profile.md` is absent. This is the
-default for personal machines, where the ChezMoi skill linker does not install a work profile.
-Use **work mode** when that file exists; follow the existing Jira and GitLab flow below
-unchanged.
+Read `~/.agents/profile.md` before shipping. ChezMoi creates it with `kind: personal` or
+`kind: work` from the machine's `.work` setting.
+
+- `kind: personal` → use personal mode.
+- `kind: work` → use work mode and follow the existing Jira and GitLab flow below unchanged.
+- Missing or invalid marker → stop and ask the user to run `chezmoi apply`; never infer the mode
+  from a missing work profile.
 
 ### Personal mode
 
