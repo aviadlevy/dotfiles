@@ -1,9 +1,38 @@
 ---
 name: ship
-description: "Use when ready to ship: takes local changes to an open MR, with the Jira ticket in Code Review and the pipeline and review watchers armed."
+description: "Use when ready to ship: opens a GitHub PR for personal repositories, or runs the Jira and GitLab delivery flow when a work profile is installed."
 ---
 
-# /ship — Full Delivery Flow
+# /ship — Delivery Flow
+
+## Mode selection
+
+Use **personal mode** when `~/.agents/work-profile/work-profile.md` is absent. This is the
+default for personal machines, where the ChezMoi skill linker does not install a work profile.
+Use **work mode** when that file exists; follow the existing Jira and GitLab flow below
+unchanged.
+
+### Personal mode
+
+Do not ask for or create a Jira ticket. Do not use `glab`, release fields, or scheduled
+watchers.
+
+1. On `main`, `master`, or `development`, create `fix/<short-description>` from the staged or
+   unstaged diff. On any other branch, keep the current branch.
+2. Commit the task's changed paths. Preserve unrelated local changes.
+3. Offer the existing local review gate from Step 4.
+4. Push the branch, then find or create a GitHub pull request using `gh pr list` and
+   `gh pr create --base <remote-default-branch>`. Infer the repository and default branch from
+   `origin`; use `main` only when the remote default cannot be resolved.
+5. Print the PR URL and stop. The user reviews and merges it; never enable auto-merge.
+
+Report the branch, commit, review result, push result, and PR URL. If `gh` is unavailable or
+not authenticated, stop and ask the user to authenticate rather than falling back to another
+forge.
+
+---
+
+# Work mode — Full Delivery Flow
 
 Work through Steps 1–9 in order; a step whose work is already done is skipped and reported
 as such in the final summary.
@@ -15,10 +44,9 @@ diff and the ticket.
 
 **On a failed command**, print the error and ask: abort or continue?
 
-**Company values** come from the work profile, `~/.agents/work-profile/work-profile.md`. Read
-it before Step 1; values below appear as its dotted keys (`jira.server`, `mr.target_branch`,
-…). When the file is missing, stop: "No work profile at `~/.agents/work-profile/` — copy
-`~/.agents/work-profile.example/` there and fill it in."
+**Company values** come from the work profile, `~/.agents/work-profile/work-profile.md`. In
+work mode, read it before Step 1; values below appear as its dotted keys (`jira.server`,
+`mr.target_branch`, …).
 
 ---
 
