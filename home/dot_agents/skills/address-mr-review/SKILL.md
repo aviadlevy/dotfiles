@@ -18,7 +18,7 @@ Fetch the review threads on a merge request, judge each one, fix what's valid, p
    **Never reply inside a bot bookkeeping thread** (walkthrough, `Actionable comments posted: N`,
    review-status, scan-result notes). Those are resolvable but nobody ever resolves them, so a reply
    there becomes a permanent unresolved marker on the MR. Mine them for content, then stay out.
-7. **Fully autonomous:** verify → fix valid → commit → push → reply, in one run. Report a summary at the end.
+7. **Fully autonomous:** verify → fix valid → commit → push → reply, in one run. Report a summary at the end. The one stop is a human approval on the MR (Step 5): a push resets approvals, so the user decides that push.
 8. **Resolve exactly the threads you opened — those, and only those.** A reviewer's thread is
    theirs to close: reply and leave it. A comment you post —
    including a `@coderabbitai …` command — becomes a *resolvable* discussion. Leave it open and the
@@ -137,9 +137,17 @@ Implement minimal, correct fixes that match repo conventions. Group related fixe
 
 ## Step 5 — Commit and push
 
+Commit, then check the approvals **immediately before** pushing, not only at the start of the run (an approval can land while you fix):
+
 ```bash
 git add -A
 git commit -m "<concise message describing the review fixes>"
+glab api "projects/:id/merge_requests/<IID>/approvals" | python3 -c "import json,sys; print([a['user']['username'] for a in json.load(sys.stdin)['approved_by']])"
+```
+
+Review bots (usernames like `group_*_bot_*`) are not humans. When a human is in that list, hold the push: report each fix (the finding, your verdict, the diff) and push only once the user says so, because the push resets that approval. Otherwise push:
+
+```bash
 git push
 SHA=$(git rev-parse --short HEAD)
 ```
