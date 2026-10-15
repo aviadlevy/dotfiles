@@ -16,22 +16,36 @@ zero unresolved threads, and GitLab merges it.
 **Degrades open** is the shape both failures on this page share: the guard stops working and every
 signal still reads green, so absence of a complaint is not evidence of a pass.
 
+A failed check is rendered as an image, under a block headed `Pre-merge checks failed`:
+
+```
+Pre-merge checks failed
+…
+**Failed checks: 1 error**
+| Performance And Algorithmic Complexity Review | ![Error](…/pre-merge-checks-error.svg) | … |
+```
+
 **Never call an MR clean without this grep** — including when the author, an agent, or a previous
 run already said it was clean:
 
 ```bash
 glab api "projects/:id/merge_requests/<IID>/notes?per_page=100" | python3 -c '
 import json,sys
+FAILED = ("Pre-merge checks failed", "pre-merge-checks-error.svg")
 for n in json.load(sys.stdin):
     b = n.get("body") or ""
     if "Pre-merge checks" not in b or n.get("system"): continue
-    print(n.get("updated_at"), "FAILED" if "❌ Error" in b else "clean")
+    print(n.get("updated_at"), "FAILED" if any(m in b for m in FAILED) else "clean")
     for line in b.split("\n"):
-        if "| ❌" in line or "Failed checks" in line: print("   ", line.strip()[:200])
+        if "pre-merge-checks-error.svg" in line or "Failed checks" in line:
+            print("   ", line.strip()[:200])
 '
 ```
 
-Only the **most recent** block counts — an older ❌ is stale rendering once a later run passes.
+A failed check's explanation and resolution are truncated in its table row. Read the full text in
+the `Full details: <check name>` block below the table before judging it.
+
+Only the **most recent** block counts — an older failure is stale rendering once a later run passes.
 
 Treat a failing check like any other finding (Step 3): verify it against the code, fix it if valid,
 push back if not. A check naming a real defect is worth taking even when it is not blocking.
@@ -50,7 +64,7 @@ value that starts with `@` as a file path, and the POST fails:
 glab api --method POST "projects/:id/merge_requests/<IID>/discussions" --raw-field "body=@coderabbitai run pre-merge checks"
 ```
 
-**An override survives later pushes.** The walkthrough keeps showing ❌ after a new push, but re-posting
+**An override survives later pushes.** The walkthrough keeps showing the failed check after a new push, but re-posting
 `ignore` only gets "Pre-merge checks are already overridden." Once per MR is enough.
 
 **Both commands create a resolvable discussion (SKILL.md principle 8). If you post one, resolve it** once the
@@ -189,7 +203,7 @@ glab api --method PUT "projects/:id/merge_requests/<IID>/discussions/<DISC_ID>?r
 **Use the full 40-character discussion id.** A truncated id returns 404, and the failure reads like
 "that thread doesn't exist" rather than "you pasted half an id".
 
-Do this in the same pass as the `❌` grep above, **before** reporting the MR as clean — an
+Do this in the same pass as the pre-merge grep above, **before** reporting the MR as clean — an
 unresolved command thread holds `detailed_merge_status` at `discussions_not_resolved` and blocks the
 merge even when every finding is handled. Two MRs were blocked this way in a single afternoon.
 

@@ -187,7 +187,8 @@ reads green, so `mergeable` and zero unresolved threads mean nothing on their ow
 self-inflicted. Before reporting any MR as clean, all three:
 
 1. **Failing pre-merge check** — renders inside a collapsed `<details>` in the walkthrough, never as
-   a thread. Grep the most recent `Pre-merge checks` block for `❌ Error`.
+   a thread. Grep the most recent `Pre-merge checks` block for `Pre-merge checks failed` or
+   `pre-merge-checks-error.svg`.
 2. **Rate-limited review** — the review never ran and nothing says so. Grep for a rate-limit note,
    then compare the last reviewed SHA against HEAD. Wait the stated interval plus ~5 minutes before
    `@coderabbitai resume`.
@@ -221,7 +222,7 @@ Replied on all N finding threads. Left unresolved for the reviewer / you to clos
 ## Common mistakes
 
 - **Missing the summary note.** The top-of-MR `Actionable comments posted: N` note often lists items with no inline thread; address those too — but reply in a standalone MR note, not in that thread.
-- **Calling an MR clean without grepping for `❌`.** A failing pre-merge check leaves every GitLab
+- **Calling an MR clean without the pre-merge grep.** A failing pre-merge check leaves every GitLab
   signal saying "mergeable". It has slipped through repeatedly. Run the Step 6b grep every time,
   even when someone already reported the MR as clean.
 - **Leaving your own comment unresolved.** `@coderabbitai …` commands and any note you open create
