@@ -38,6 +38,18 @@ Skills refer to each value by its dotted **key** (`ship` stops when the profile 
 `review.noise_markers` — extra bookkeeping-comment prefixes to skip (lowercase substrings):
 - `<marker>` — `<which bot posts it>`
 
+## Orchestrate
+
+Bindings for the `orchestrate` skill; a missing key falls back to the skill's default.
+
+| Key | Value |
+|---|---|
+| `orchestrate.task_source` | `<where tasks come from, and which ones are yours>` |
+| `orchestrate.delivery` | `<delivery skill; how human reviewers are requested>` |
+| `orchestrate.review_bot` | `<bot, its re-review command, any command that is hands-off>` |
+| `orchestrate.artifact` | `<how to fetch and check the CI build for a sha>` |
+| `orchestrate.network` | `<what a live-test network run must pre-flight>` |
+
 ## Processes
 
 `process.<ticket-type>` — ticket types that change the delivery flow; read the file before
