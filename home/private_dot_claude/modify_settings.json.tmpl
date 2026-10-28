@@ -50,6 +50,25 @@ jq '
       "Bash(docker restart:*)",
       "Bash(docker logs:*)"
     ] | unique)
+  | .deniedMcpServers = ((.deniedMcpServers // []) + ([
+      "claude.ai Atlassian",
+      "claude.ai DataDog",
+      "claude.ai GitLab",
+      "claude.ai Gmail",
+      "claude.ai Google Calendar",
+      "claude.ai Salesforce Production (read only)",
+      "claude.ai Asana",
+      "claude.ai Clay",
+      "claude.ai Figma",
+      "claude.ai Google Cloud BigQuery",
+      "claude.ai HubSpot",
+      "claude.ai peecai",
+      "claude.ai Semrush",
+      "claude.ai Zapier",
+      "claude.ai amplemarket",
+      "claude.ai oliv.ai",
+      "claude.ai Whimsical"
+    ] | map({serverName: .})) | unique)
   | .hooks = (.hooks // {})
   | .hooks.PostToolUse = (
       (.hooks.PostToolUse // []) as $pt
