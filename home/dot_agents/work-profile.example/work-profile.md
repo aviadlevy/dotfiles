@@ -50,6 +50,16 @@ Bindings for the `orchestrate` skill; a missing key falls back to the skill's de
 | `orchestrate.artifact` | `<how to fetch and check the CI build for a sha>` |
 | `orchestrate.network` | `<what a live-test network run must pre-flight>` |
 
+## Cloud
+
+Bindings for the `to-cloud` skill; a missing key falls back to the skill's default.
+
+| Key | Value |
+|---|---|
+| `cloud.launch_repo` | `<local path of the GitHub repo cloud sessions start in>` |
+| `cloud.environment` | `<cloud environment name, as /remote-env lists it>` |
+| `cloud.checkout` | `<what the handoff must name so the session can check the work out>` |
+
 ## Processes
 
 `process.<ticket-type>` — ticket types that change the delivery flow; read the file before
