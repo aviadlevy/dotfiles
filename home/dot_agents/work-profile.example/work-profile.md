@@ -57,7 +57,7 @@ Bindings for the `to-cloud` skill; a missing key falls back to the skill's defau
 | Key | Value |
 |---|---|
 | `cloud.launch_repo` | `<local path of the GitHub repo cloud sessions start in>` |
-| `cloud.environment` | `<cloud environment name, as /remote-env lists it>` |
+| `cloud.environment` | `<name, as /remote-env lists it>` (`<env_ id /remote-env prints>`) |
 | `cloud.checkout` | `<what the handoff must name so the session can check the work out>` |
 
 ## Processes

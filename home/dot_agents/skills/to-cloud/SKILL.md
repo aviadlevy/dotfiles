@@ -64,7 +64,8 @@ environment through the `/remote-env` pick alone:
 jq -r '.remote.defaultEnvironmentId // empty' ~/.claude/settings.json
 ```
 
-Empty → stop and ask the user to run `/remote-env` once and pick the bound environment.
+Empty, or different from the `env_` ID the environment binding names → stop and ask the user to
+run `/remote-env` and pick the bound environment.
 
 The VM clones the launch repo's GitHub remote at its current branch, so that branch must be
 pushed too. `--cloud` refuses to run without a terminal, so `script` gives it one; with stdin
