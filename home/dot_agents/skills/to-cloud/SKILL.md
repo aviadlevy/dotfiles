@@ -47,6 +47,8 @@ handoff to that.
 
 - **Open with where the work is**: the repo, the branch and the ticket key (from the branch
   name), in the form the checkout binding needs; then what is done and what is next.
+  Read every ticket key you name (parent, epic, related) from the tracker, not from
+  memory.
 - **Suggested skills**: which skills the next agent should call the Skill tool for.
 - **Reference** committed artifacts (specs, commits, MRs, tickets) by path or URL instead of
   restating them. A local path that is not pushed (a plan in `$TMPDIR`, a log, a screenshot) is a
