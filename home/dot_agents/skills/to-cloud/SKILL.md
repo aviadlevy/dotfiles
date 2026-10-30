@@ -22,7 +22,17 @@ key (`~/.agents/work-profile/work-profile.md`); otherwise use the default.
 | environment | `cloud.environment` | whichever `/remote-env` picked |
 | checkout | `cloud.checkout` | the session starts on the pushed branch of the launch repo |
 
-## Step 1 — Branch
+## Step 1 — Fit
+
+Read the cloud's limits in the launch repo's `CLAUDE.md`, check each step of the work the
+cloud session will do against them, and state a one-line verdict:
+
+- **Cloud: yes.**
+- **Cloud: partly**, naming each step that can't run there and why. The handoff lists those
+  steps as left to the user, and the session skips them.
+- **Cloud: no**, and why. Stop.
+
+## Step 2 — Branch
 
 In the repo the work is in (skip this step when the work is in no git repo):
 
@@ -39,7 +49,7 @@ git log --oneline '@{u}..HEAD'
 
 Done when the working tree is clean and `HEAD` equals its upstream.
 
-## Step 2 — Handoff
+## Step 3 — Handoff
 
 Write a handoff that lets a fresh agent continue the work, to `$TMPDIR/to-cloud-<slug>.md`. If
 the user passed arguments, they describe what the cloud session will work on: tailor the
@@ -57,7 +67,7 @@ handoff to that.
 
 Done when the handoff holds no dead links.
 
-## Step 3 — Launch
+## Step 4 — Launch
 
 `--environment` takes only self-hosted `ccpool_` IDs, so the CLI reaches an Anthropic-hosted
 environment through the `/remote-env` pick alone:
