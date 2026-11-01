@@ -1,0 +1,28 @@
+#!/bin/bash
+# Writes zsh completions for CLIs too slow to generate on every shell start (~1.2s together) into
+# ~/.local/share/zsh/completions, which ~/.zshrc puts on fpath.
+# chezmoi reruns this when a version below changes, so `chezmoi apply` after an upgrade refreshes it.
+{{- $tools := list (list "uv" "generate-shell-completion zsh") (list "poetry" "completions zsh") (list "herdr" "completion zsh") }}
+# Versions: {{ range $tools }}{{ $name := index . 0 }}{{ if lookPath $name }}{{ $name }}={{ output "sh" "-c" (printf "%s --version 2>/dev/null || true" $name) | trim }} {{ end }}{{ end }}
+set -uo pipefail
+dir="$HOME/.local/share/zsh/completions"
+mkdir -p "$dir"
+failed=0
+gen() {
+  local name=$1
+  shift
+  if "$name" "$@" >"$dir/_$name.tmp" 2>/dev/null && [ -s "$dir/_$name.tmp" ]; then
+    mv -f "$dir/_$name.tmp" "$dir/_$name"
+  else
+    rm -f "$dir/_$name.tmp"
+    echo "shell-completions: $name failed, keeping the previous file" >&2
+    failed=1
+  fi
+}
+{{ range $tools -}}
+{{ if lookPath (index . 0) -}}
+gen {{ index . 0 }} {{ index . 1 }}
+{{ end -}}
+{{ end -}}
+# Non-zero makes chezmoi retry on the next apply.
+exit $failed

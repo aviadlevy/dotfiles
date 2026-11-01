@@ -1,7 +1,21 @@
 # enable after installing nvm - https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating
 {{ if stat (joinPath .chezmoi.homeDir ".nvm") }}
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+# Sourcing nvm.sh costs ~2s, so the `default` alias's node goes straight onto PATH and nvm itself
+# loads on the first `nvm` call. An alias that is not a plain installed version (lts/*, node, a
+# missing version) falls back to sourcing nvm.sh: slow but correct, never a wrong node.
+() {
+  local want hits=()
+  [[ -r $NVM_DIR/alias/default ]] && want=${$(<$NVM_DIR/alias/default)#v}
+  [[ $want =~ '^[0-9]+(\.[0-9]+)*$' ]] && hits=($NVM_DIR/versions/node/v${want}(|.*)(N/nOn))
+  if (( $#hits )); then
+    export NVM_BIN=$hits[1]/bin NVM_INC=$hits[1]/include/node
+    path=($NVM_BIN ${path:#$NVM_BIN})
+    nvm() { unfunction nvm; \. "$NVM_DIR/nvm.sh" --no-use; nvm "$@" }
+  else
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  fi
+}
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 {{ end }}
 
@@ -9,36 +23,36 @@ export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || pr
 {{ if lookPath "pyenv" }}
 export PYENV_ROOT="$HOME/.pyenv"
 command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init - --no-rehash)"
+# Shims go on PATH now, so every child process (make, scripts) gets pyenv's python; the `pyenv`
+# shell function (needed for `pyenv shell` / `pyenv rehash`) loads on its first call.
+export PYENV_SHELL=zsh
+path=($PYENV_ROOT/shims ${path:#$PYENV_ROOT/shims})
+pyenv() { unfunction pyenv; eval "$(command pyenv init - --no-rehash zsh)"; pyenv "$@" }
 pip() {
   command pip "$@"
   [[ -z "$VIRTUAL_ENV" ]] && pyenv rehash
 }
 {{ end }}
 
-{{- if lookPath "uv" }}
-eval "$(uv generate-shell-completion zsh)"
-{{ end -}}
-
 {{- if lookPath "rbenv" }}
-eval "$(rbenv init -)"
+# Same split as pyenv. No rehash per shell: rbenv's gem hook rehashes after `gem install`.
+export RBENV_SHELL=zsh
+path=(${RBENV_ROOT:-$HOME/.rbenv}/shims ${path:#${RBENV_ROOT:-$HOME/.rbenv}/shims})
+rbenv() { unfunction rbenv; eval "$(command rbenv init - --no-rehash zsh)"; rbenv "$@" }
 {{ end -}}
 
 {{- if lookPath "jira" }}
 {{ end -}}
 
-{{- if lookPath "aws" }}
-{{- if eq .chezmoi.os "linux-ubuntu" }}
-complete -C '/usr/local/bin/aws_completer' aws
-{{ else }}
-complete -C '/opt/homebrew/bin/aws_completer' aws
-{{ end -}}
+{{- if and (lookPath "aws") (lookPath "aws_completer") }}
+complete -C {{ lookPath "aws_completer" | quote }} aws
 {{ end -}}
 
-{{- if lookPath "gvgen" }}
-export PATH=$(brew --prefix graphviz):$PATH
-export CFLAGS="-I $(brew --prefix graphviz)/include"
-export LDFLAGS="-L $(brew --prefix graphviz)/lib"
+{{- if and (lookPath "gvgen") (lookPath "brew") }}
+{{- $graphviz := output "brew" "--prefix" "graphviz" | trim }}
+export PATH={{ $graphviz }}:$PATH
+export CFLAGS="-I {{ $graphviz }}/include"
+export LDFLAGS="-L {{ $graphviz }}/lib"
 {{ end -}}
 
 {{- if lookPath "gcloud" }}
@@ -50,8 +64,14 @@ if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/google-clou
 {{ end -}}
 
 {{- if lookPath "opam" }}
-export OPAMSWITCH="${OPAMSWITCH:-default}"
-eval "$(opam env --switch "$OPAMSWITCH" --set-switch 2>/dev/null)"
+# opam keeps opam-init/init.zsh current for the global default switch; `opam env` (~300ms) only
+# runs when OPAMSWITCH asks for a specific switch.
+if [[ -z $OPAMSWITCH && -r ~/.opam/opam-init/init.zsh ]]; then
+  source ~/.opam/opam-init/init.zsh >/dev/null 2>&1
+else
+  export OPAMSWITCH="${OPAMSWITCH:-default}"
+  eval "$(opam env --switch "$OPAMSWITCH" --set-switch 2>/dev/null)"
+fi
 {{ end -}}
 
 {{ if stat (joinPath .chezmoi.homeDir "go" "bin") }}
