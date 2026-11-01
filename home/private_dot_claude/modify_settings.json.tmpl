@@ -52,6 +52,7 @@ jq '
     ] | unique)
   | .deniedMcpServers = ((.deniedMcpServers // []) + ([
       "claude.ai Atlassian",
+      "claude.ai Atlassian MCP",
       "claude.ai DataDog",
       "claude.ai GitLab",
       "claude.ai Gmail",
