@@ -34,6 +34,9 @@ autoload bashcompinit && bashcompinit
 
 FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 source $ZSH/oh-my-zsh.sh
+{{- if lookPath "herdr" }}
+eval "$(herdr completion zsh)"
+{{- end }}
 
 export EDITOR='vim'
 
