@@ -17,10 +17,14 @@ Auto-review round <ROUND> of 2 on MR !<IID>: follow ~/.agents/skills/ship/review
    system notes and `@coderabbit*` commands; a thread counts when its last note is not mine, or
    when it is my own root note with exactly one note).
 
-3. **0 threads** means the bots have not posted yet, so the round is not consumed:
+3. **0 threads** means either the bots have not posted yet or they approved clean; tell them apart:
    - Run the pre-merge grep from Step 6b of `address-mr-review` first. A failing CodeRabbit
      pre-merge check posts no thread; it hides in a collapsed `<details>` in the walkthrough.
      `❌` in the most recent block → invoke `address-mr-review`, then continue as in step 4.
+   - Read the approvals: `glab api "projects/:id/merge_requests/<IID>/approvals"` and list
+     `approved_by[].user.username`. A review bot (username contains `coderabbit`, `baz` or `bot_`)
+     there → stop: "MR !<IID>: approved by <bot>, 0 open threads; watcher off." Also report
+     `approvals_left`, since a bot approval rarely satisfies the approval rule.
    - MR created more than 60 minutes ago → stop: "No review comments on !<IID> after an hour;
      watcher off."
    - Otherwise reschedule this prompt unchanged, same `<ROUND>`, 3 minutes out.
