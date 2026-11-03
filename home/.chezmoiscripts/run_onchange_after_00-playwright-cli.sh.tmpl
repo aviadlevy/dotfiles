@@ -1,0 +1,13 @@
+#!/bin/bash
+# Installs playwright-cli's bundled agent skill into ~/.agents/skills (link-skills then links it
+# into ~/.claude/skills) and the Chromium build that CLI version needs. The CLI comes from the Brewfile.
+# Named 00- so it runs before link-skills; reruns when the CLI version changes:
+# {{ if lookPath "playwright-cli" }}{{ output "playwright-cli" "--version" | trim }}{{ end }}
+set -euo pipefail
+if ! command -v playwright-cli >/dev/null; then
+  echo "playwright-cli: not installed, skipping (brew bundle install --file=~/Brewfile)" >&2
+  exit 0
+fi
+
+playwright-cli install --skills=agents --global
+playwright-cli install-browser chromium
