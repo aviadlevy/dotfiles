@@ -7,13 +7,13 @@ After a compaction: read this file, then continue.
 ## Bindings for this run
 - Task source: <epic / ticket list>
 - Repos: <repo → main checkout path>
-- Orchestrator: workspace <ws>, permission mode <mode>
+- Orchestrator: terminal <$HC_TERMINAL_ID>, Herdr space <id>, permission mode <mode>
 
 ## Rules the user added
 - <rule> (<date>)
 
 ## Workers
-| Name [ref] | Workspace / surface | Task | Context % | Since |
+| Name | Address | Task | Context % | Since |
 |---|---|---|---|---|
 
 ## Tasks
@@ -29,7 +29,7 @@ After a compaction: read this file, then continue.
 
 ## Pending for the user
 1. <question> — recommend: <option>
-2. Window action: go to `<pane>`, type `<words>`
+2. Window action: go to Herdr tab `<worker>`, type `<words>`
 
 ## Decisions (append-only)
 - <UTC timestamp> <the user's answer, verbatim enough to act on>

@@ -11,10 +11,12 @@ everything below.
 
 ## Routing
 
-Send every question, decision and finding to the orchestrator with `SendMessage` (copy the `from` of
-its last message as `to`). The orchestrator batches them for the user and relays the answers.
+Send every question, decision and finding to the orchestrator with `hc send <address> "<report>"`.
+The address is the one your first message named, or the `from` of its latest `<hc from="…">` tag. The
+orchestrator batches them for the user and relays the answers.
 
-- Peer-to-peer is fine for technical contracts with another worker (hosts, ports, a shared schema).
+- Peer-to-peer (`hc send <peer>`) is fine for technical contracts with another worker (hosts,
+  ports, a shared schema).
   Decisions about either side still go to the orchestrator.
 - A user-invoked skill is out of your reach: ask the orchestrator to run it and relay the output.
 
