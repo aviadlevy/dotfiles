@@ -10,6 +10,8 @@ description: "Use when ready to ship: opens a GitHub PR for personal repositorie
 Read `~/.agents/profile.md` before shipping. ChezMoi creates it with `kind: personal` or
 `kind: work` from the machine's `.work` setting.
 
+- `origin` (`git remote get-url origin`) is a `github.com/aviadlevy/*` repository → use personal
+  mode, whatever the marker says: a work machine still ships its owner's personal repos.
 - `kind: personal` → use personal mode.
 - `kind: work` → use work mode and follow the existing Jira and GitLab flow below unchanged.
 - Missing or invalid marker → stop and ask the user to run `chezmoi apply`; never infer the mode
