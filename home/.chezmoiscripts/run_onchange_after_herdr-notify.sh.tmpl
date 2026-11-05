@@ -1,0 +1,9 @@
+#!/bin/bash
+# (Re)loads the herdr-notify launch agent so a changed script or plist takes effect now, not at
+# next login. Reruns when either changes:
+# script {{ include "dot_local/bin/executable_herdr-notify" | sha256sum }}
+# plist {{ include "Library/LaunchAgents/dev.aviadlevy.herdr-notify.plist.tmpl" | sha256sum }}
+set -euo pipefail
+plist="$HOME/Library/LaunchAgents/dev.aviadlevy.herdr-notify.plist"
+launchctl bootout "gui/$(id -u)/dev.aviadlevy.herdr-notify" 2>/dev/null || true
+launchctl bootstrap "gui/$(id -u)" "$plist"

@@ -1,0 +1,11 @@
+{
+  "zoom": 1,
+  "sounds": {
+    "enabled": true
+  },
+  "minimum_contrast": 1,
+  "theme": "night-owl",
+  "font": "MesloLGSDZ Nerd Font Mono",
+  "font_size": 17,
+  "telemetry": false
+}

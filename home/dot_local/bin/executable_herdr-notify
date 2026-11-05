@@ -1,0 +1,115 @@
+#!/usr/bin/env python3
+"""Posts a macOS notification when a Herdr agent needs you, finishes or errors while Herdr isn't
+the front app. Follows `hc events`, so it works with the Herdr window closed. Run by launchd
+(~/Library/LaunchAgents/dev.aviadlevy.herdr-notify.plist); `herdr-notify --self-test` checks it."""
+import json
+import os
+import re
+import shlex
+import shutil
+import subprocess
+import sys
+
+HERDR_BUNDLE = "dev.herdr.app"
+ADDRESS = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_./-]{0,63}$")
+
+
+def decide(old, new, is_child):
+    """What to say about one agent's status change, or None. Words are 7501 states."""
+    if new == old or new is None:
+        return None
+    if new == "blocked":
+        return "Needs you"
+    if new == "error":
+        return "Error"
+    # A sub-agent's finish goes to its parent agent (hc notes), not to the person.
+    if old == "working" and new in ("idle", "done") and not is_child:
+        return "Finished"
+    return None
+
+
+def status_word(term):
+    return (term.get("status") or {}).get("state")
+
+
+def herdr_in_front():
+    asn = subprocess.run(["lsappinfo", "front"], capture_output=True, text=True).stdout.strip()
+    info = subprocess.run(["lsappinfo", "info", "-only", "bundleid", asn], capture_output=True, text=True).stdout
+    return HERDR_BUNDLE in info
+
+
+def post(address, term, what):
+    status = term.get("status") or {}
+    detail = status.get("kind") or status.get("msg") or ""
+    where = (term.get("labels") or {}).get("where") or term.get("name") or address
+    cmd = ["terminal-notifier", "-title", f"Herdr · {where}", "-message", f"{what}{': ' + detail if detail else ''}",
+           "-group", f"herdr-{address}", "-activate", HERDR_BUNDLE]
+    if term.get("title"):
+        cmd += ["-subtitle", term["title"]]
+    if ADDRESS.match(address):
+        cmd += ["-execute", focus_command(address)]
+    subprocess.run(cmd, capture_output=True)
+
+
+def focus_command(address):
+    # -execute runs through sh, and on click terminal-notifier has launchd's bare PATH (no
+    # ~/.local/bin): use herdr-app's full path. Only a validated address goes in, quoted.
+    app = shutil.which("herdr-app") or os.path.expanduser("~/.local/bin/herdr-app")
+    return f"{shlex.quote(app)} do agent.focus --terminal {shlex.quote(address)}"
+
+
+def follow(lines):
+    terms, floor = {}, -1
+    for line in lines:
+        try:
+            msg = json.loads(line)
+        except ValueError:
+            continue
+        if "terminals" in msg:  # the opening snapshot: learn, don't notify
+            terms = {t["address"]: t for t in msg["terminals"]}
+            floor = msg.get("seq", floor)
+            continue
+        p = msg.get("params") or {}
+        address, data = p.get("terminal"), p.get("data")
+        if msg.get("method") != "event" or not address or not isinstance(data, dict) or p.get("seq", 0) <= floor:
+            continue
+        old = terms.get(address, {})
+        new = {**old, **data}
+        terms[address] = new
+        what = decide(status_word(old), status_word(new), bool(new.get("parent")))
+        if what:
+            yield address, new, what
+
+
+def self_test():
+    assert decide("working", "blocked", False) == "Needs you"
+    assert decide("working", "idle", False) == "Finished"
+    assert decide("working", "idle", True) is None
+    assert decide("idle", "idle", False) is None
+    assert decide("blocked", "working", False) is None
+    assert decide(None, "error", True) == "Error"
+    snap = json.dumps({"seq": 5, "terminals": [{"address": "t1", "parent": None, "status": {"state": "working"}}]})
+    ev = lambda seq, data: json.dumps({"method": "event", "params": {"terminal": "t1", "seq": seq, "type": "status", "data": data}})
+    out = list(follow([snap, ev(4, {"status": {"state": "blocked"}}), ev(6, {"status": {"state": "idle"}}), "noise"]))
+    assert [(a, w) for a, _, w in out] == [("t1", "Finished")], out
+    assert not ADDRESS.match("t1; rm -rf ~") and ADDRESS.match("vps/t7")
+    assert focus_command("t7").startswith("/"), "click runs with a bare PATH: needs a full path"
+    print("ok")
+
+
+def main():
+    if sys.argv[1:] == ["--self-test"]:
+        return self_test()
+    try:
+        proc = subprocess.Popen(["hc", "events", "--json"], stdout=subprocess.PIPE, text=True)
+    except FileNotFoundError:
+        print("herdr-notify: hc not found; install Herdr", file=sys.stderr)
+        sys.exit(0)  # a clean exit: launchd (KeepAlive SuccessfulExit=false) won't respawn it
+    for address, term, what in follow(proc.stdout):
+        if not herdr_in_front():
+            post(address, term, what)
+    sys.exit(proc.wait() or 1)  # the stream ended (core restart, update): launchd starts us again
+
+
+if __name__ == "__main__":
+    main()
