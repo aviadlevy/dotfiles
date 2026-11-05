@@ -1,17 +1,17 @@
 # Auto-review round
 
 Run by the one-shot cron `ship` arms in its last step. Inputs: `<IID>` (the MR) and
-`<ROUND>` (1 or 2). Each round ends by rescheduling the next one or by stopping, using this
+`<ROUND>` (1 to 5). Each round ends by rescheduling the next one or by stopping, using this
 prompt with the values filled in:
 
 ```
-Auto-review round <ROUND> of 2 on MR !<IID>: follow ~/.agents/skills/ship/review-round.md.
+Auto-review round <ROUND> of 5 on MR !<IID>: follow ~/.agents/skills/ship/review-round.md.
 ```
 
 ## Steps
 
-1. **Round cap.** `<ROUND>` above 2 → stop and report: "MR !<IID>: N threads still open after
-   2 automated rounds — over to you."
+1. **Round cap.** `<ROUND>` above 5 → stop and report: "MR !<IID>: N threads still open after
+   5 automated rounds — over to you."
 
 2. **Count open threads** with Step 2 of `address-mr-review`, verbatim (same filter: skip
    system notes and `@coderabbit*` commands; a thread counts when its last note is not mine, or

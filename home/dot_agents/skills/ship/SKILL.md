@@ -214,7 +214,7 @@ Arm both, then finish; neither blocks.
    notifies on success). Note the cron ID.
 2. **Review rounds** — one-shot `CronCreate` (`recurring: false`), 3 minutes out:
    ```
-   Auto-review round 1 of 2 on MR !<IID>: follow ~/.agents/skills/ship/review-round.md.
+   Auto-review round 1 of 5 on MR !<IID>: follow ~/.agents/skills/ship/review-round.md.
    ```
 
 Tell the user both job IDs, and that the crons are **session-only**: they die with this
@@ -234,5 +234,5 @@ session.
 ✓ MR:      <MR URL>                                 (or: already existed)
 ✓ Release: <field>=<value> · … (all read back)
 ✓ Jira:    <TICKET_ID> → <jira.status.code_review>  (or: already there)
-✓ Watch:   pipeline cron <id> · review rounds 1-2 armed (session-only)
+✓ Watch:   pipeline cron <id> · review rounds 1-5 armed (session-only)
 ```
