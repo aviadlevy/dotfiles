@@ -21,4 +21,4 @@ Read-only references: <paths>
 FORBIDDEN (never read, never copy): <secret and customer-data paths>
 ```
 
-Send it with `notify_when_idle: true`.
+Send it with `hc send <worker> "<message>"`.
