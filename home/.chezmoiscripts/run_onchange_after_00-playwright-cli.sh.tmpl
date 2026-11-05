@@ -1,12 +1,16 @@
 #!/bin/bash
-# Installs playwright-cli's bundled agent skill into ~/.agents/skills (link-skills then links it
-# into ~/.claude/skills) and the Chromium build that CLI version needs. The CLI comes from the Brewfile.
+# Installs playwright-cli the way upstream recommends (global npm package, under nvm's default node),
+# then its bundled agent skill into ~/.agents/skills (link-skills then links it into ~/.claude/skills)
+# and the Chromium build that CLI version needs. Upgrade with `npm install -g @playwright/cli@latest`.
 # Named 00- so it runs before link-skills; reruns when the CLI version changes:
 # {{ if lookPath "playwright-cli" }}{{ output "playwright-cli" "--version" | trim }}{{ end }}
 set -euo pipefail
 if ! command -v playwright-cli >/dev/null; then
-  echo "playwright-cli: not installed, skipping (brew bundle install --file=~/Brewfile)" >&2
-  exit 0
+  if ! command -v npm >/dev/null; then
+    echo "playwright-cli: npm not found, skipping (install node with nvm first)" >&2
+    exit 0
+  fi
+  npm install -g @playwright/cli@latest
 fi
 
 playwright-cli install --skills=agents --global
