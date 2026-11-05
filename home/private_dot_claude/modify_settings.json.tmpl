@@ -26,6 +26,13 @@ jq '
     }
   | .extraKnownMarketplaces = ({{ .claudeMarketplaces | toJson }} | map_values({source: {source: "github", repo: .}}))
   | .enabledPlugins = ({{ .claudePlugins | toJson }} | map({(.): true}) | add)
+  # cmux skills stay installed (manaflow-ai/cmux via `npx skills`) for quick recovery, just hidden
+  | .skillOverrides = ((.skillOverrides // {}) + {
+      "cmux": "off",
+      "cmux-browser": "off",
+      "cmux-diagnostics": "off",
+      "cmux-workspace": "off"
+    })
   | .permissions.allow = ((.permissions.allow // []) + [
       "Bash(git log*)",
       "Bash(git diff*)",
