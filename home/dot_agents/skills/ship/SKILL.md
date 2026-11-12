@@ -1,6 +1,6 @@
 ---
 name: ship
-description: "Use when ready to ship: opens a GitHub PR for personal repositories, or runs the Jira and GitLab delivery flow when a work profile is installed."
+description: "Use before opening any PR or MR, or when ready to ship: opens a GitHub PR for personal repositories, or runs the Jira and GitLab delivery flow when a work profile is installed."
 ---
 
 # /ship — Delivery Flow

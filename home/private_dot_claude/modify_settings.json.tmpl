@@ -5,6 +5,14 @@
 # ask-every-time ("default") on the home laptop.
 # Claude attribution on commits and PRs is hidden at home and kept at work.
 jq '
+  # Appends a Bash hook for $event unless one already runs $cmd.
+  def ensure_bash_hook($event; $cmd):
+    .hooks[$event] = (
+      (.hooks[$event] // []) as $h
+      | if any($h[]?.hooks[]?; .command == $cmd) then $h
+        else $h + [{"matcher":"Bash","hooks":[{"type":"command","command":$cmd}]}]
+        end
+    );
   del(.model)
   | .permissions.defaultMode = "{{ if .work }}auto{{ else }}default{{ end }}"
 {{- if not .work }}
@@ -78,11 +86,6 @@ jq '
       "claude.ai Whimsical"
     ] | map({serverName: .})) | unique)
   | .hooks = (.hooks // {})
-  | .hooks.PostToolUse = (
-      (.hooks.PostToolUse // []) as $pt
-      | if any($pt[]?.hooks[]?; .command == "{{ .chezmoi.homeDir }}/.claude/skills/yoram/yoram-nudge.sh")
-        then $pt
-        else $pt + [{"matcher":"Bash","hooks":[{"type":"command","command":"{{ .chezmoi.homeDir }}/.claude/skills/yoram/yoram-nudge.sh"}]}]
-        end
-    )
+  | ensure_bash_hook("PostToolUse"; "{{ .chezmoi.homeDir }}/.claude/skills/yoram/yoram-nudge.sh")
+  | ensure_bash_hook("PreToolUse"; "{{ .chezmoi.homeDir }}/.claude/skills/ship/require-ship.sh")
 '
