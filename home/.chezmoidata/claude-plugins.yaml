@@ -3,9 +3,7 @@
 claudeMarketplaces: # name → GitHub repo; claude-plugins-official is built in
   mattpocock: mattpocock/skills
   ponytail: DietrichGebert/ponytail
-  claude-image-view: jarrodwatts/claude-image-view
 claudePlugins:
   - context7@claude-plugins-official
   - mattpocock-skills@mattpocock
   - ponytail@ponytail
-  - image-view@claude-image-view

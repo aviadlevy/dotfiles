@@ -59,8 +59,7 @@
     "ctrl-9": "space.select:9",
     "cmd-shift-left": "tab.prev",
     "cmd-shift-right": "tab.next",
-    "cmd-shift-f": "pane.zoom",
-    "cmd-shift-o": { "command": "tab.new", "args": { "name": "Work", "mod": "work-board" } }
+    "cmd-shift-f": "pane.zoom"
   },
   "terminal": {
     "cmd-c": "terminal.copy",
