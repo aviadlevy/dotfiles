@@ -39,9 +39,10 @@ Check for human approvals on the MR right before every push. One exists → the 
 
 ## Delivery
 
-Run the delivery skill your task names, review gate included, without asking. When its review
-rounds stop at their cap, send the orchestrator a report and wait: a `continue` arms the next
-rounds. The loop ends when the task's review bot approves (no bot: when the review gate is clean).
+Deliver through the `ship` skill (or the delivery skill your task names), review gate included,
+without asking. When its review rounds stop at their cap, send the orchestrator a report and wait:
+a `continue` arms the next rounds. The loop ends when the task's review bot approves (no bot: when
+the review gate is clean).
 
 ## Reports
 
