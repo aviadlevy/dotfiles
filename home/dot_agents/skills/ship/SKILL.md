@@ -1,6 +1,6 @@
 ---
 name: ship
-description: "Use before opening any PR or MR, or when ready to ship: opens a GitHub PR for personal repositories, or runs the Jira and GitLab delivery flow when a work profile is installed."
+description: "Use before opening any PR or MR, or when ready to ship: opens a PR or MR for personal repositories, or runs the Jira and GitLab delivery flow when a work profile is installed."
 ---
 
 # /ship — Delivery Flow
@@ -10,8 +10,9 @@ description: "Use before opening any PR or MR, or when ready to ship: opens a Gi
 Read `~/.agents/profile.md` before shipping. ChezMoi creates it with `kind: personal` or
 `kind: work` from the machine's `.work` setting.
 
-- `origin` (`git remote get-url origin`) is a `github.com/aviadlevy/*` repository → use personal
-  mode, whatever the marker says: a work machine still ships its owner's personal repos.
+- `origin` (`git remote get-url origin`) is a `github.com/aviadlevy/*` or
+  `gitlab.com/aviadlevy.ox/*` repository → use personal mode, whatever the marker says: a work
+  machine still ships its owner's personal repos.
 - `kind: personal` → use personal mode.
 - `kind: work` → use work mode and follow the existing Jira and GitLab flow below unchanged.
 - Missing or invalid marker → stop and ask the user to run `chezmoi apply`; never infer the mode
@@ -19,21 +20,23 @@ Read `~/.agents/profile.md` before shipping. ChezMoi creates it with `kind: pers
 
 ### Personal mode
 
-Do not ask for or create a Jira ticket. Do not use `glab`, release fields, or scheduled
-watchers.
+Skip the ticket: no Jira, no release fields, no scheduled watchers. When an issue on the
+repository's own forge covers the change (the user names one, or the branch or a commit
+references `#N`), reference it in the PR/MR body as `Closes #N`.
 
 1. On `main`, `master`, or `development`, create `fix/<short-description>` from the staged or
    unstaged diff. On any other branch, keep the current branch.
 2. Commit the task's changed paths. Preserve unrelated local changes.
 3. Offer the existing local review gate from Step 4.
-4. Push the branch, then find or create a GitHub pull request using `gh pr list` and
-   `gh pr create --base <remote-default-branch>`. Infer the repository and default branch from
-   `origin`; use `main` only when the remote default cannot be resolved.
-5. Print the PR URL and stop. The user reviews and merges it; never enable auto-merge.
+4. Push the branch, then find or create the pull request on `origin`'s forge, targeting the
+   remote default branch: GitHub with `gh pr list` / `gh pr create --base <branch>`, GitLab with
+   `glab mr list` / `glab mr create --target-branch <branch>`. Infer the repository and default
+   branch from `origin`; use `main` only when the remote default cannot be resolved.
+5. Print the PR/MR URL and stop. The user reviews and merges it; never enable auto-merge.
 
-Report the branch, commit, review result, push result, and PR URL. If `gh` is unavailable or
-not authenticated, stop and ask the user to authenticate rather than falling back to another
-forge.
+Report the branch, commit, review result, push result, and PR/MR URL. If `origin`'s CLI (`gh` or
+`glab`) is unavailable or not authenticated, stop and ask the user to authenticate rather than
+falling back to another forge.
 
 ---
 
