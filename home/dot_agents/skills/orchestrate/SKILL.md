@@ -67,10 +67,14 @@ Ask the user (AskUserQuestion): you create the workers, or they open them.
 - **You create:** one per worker, as a tab in your own space (read `herdr.space` from
   `hc get $HC_TERMINAL_ID --json`), model, permission mode and first message set at launch:
   `hc run --bg --outlive-parent --name <run-name>-w<n> --cwd <repo> --label herdr.space=<space>
-  claude --model opus --permission-mode auto "Load orchestrated-worker. Your orchestrator is
-  <$HC_TERMINAL_ID>: report ready to it, then wait for your task."`
+  zsh -ic 'claude --model opus --permission-mode auto "Load orchestrated-worker. Your
+  orchestrator is <$HC_TERMINAL_ID>: check jira me </dev/null works, report ready to it, then
+  wait for your task."'`
+  `zsh -ic` gives the worker the interactive-shell env (`.zshrc`): a bare `claude` or `zsh -lc`
+  launch has no `JIRA_API_TOKEN`, and every ticket write fails.
   Check `first_message.sent` in the output; `false` → `hc read` it, clear the dialog (a trust
-  prompt takes `hc keys <worker> down enter`), then `hc send` the message once.
+  prompt takes `hc keys <worker> down enter`), then `hc send` the message once. Herdr gives
+  `hc`-launched terminals no tab label, so each worker gets its own tab; panes are a manual drag.
 - **User opens:** they start N Claude tabs in Herdr, then tell you. Find them with `hc ls`
   (`agent: claude-code`, matched by `where`). These are not your children: their reports are your
   only wake signal from them.
@@ -78,7 +82,8 @@ Ask the user (AskUserQuestion): you create the workers, or they open them.
 Every worker runs `auto`, as you do: a worker in another mode holds your messages for its user's
 approval. `--outlive-parent` keeps workers alive across your own restarts; step 9 closes them.
 Record each worker's name, address and Herdr tab.
-Done when every worker has a roster row and has reported back after loading `orchestrated-worker`.
+Done when every worker has a roster row and has reported back, with a working `jira me`, after
+loading `orchestrated-worker`.
 
 ### 3. Plan
 
