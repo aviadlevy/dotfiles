@@ -1,0 +1,16 @@
+#!/bin/bash
+# Installs the repo-root Brewfiles: Brewfile everywhere, Brewfile.only_mac on macOS,
+# Brewfile.ox on a work machine. Reruns when any of them changes:
+{{- $files := list "Brewfile" }}
+{{- if eq .chezmoi.os "darwin" }}{{ $files = append $files "Brewfile.only_mac" }}{{ end }}
+{{- if .work }}{{ $files = append $files "Brewfile.ox" }}{{ end }}
+{{- range $files }}
+# {{ . }} {{ include (joinPath $.chezmoi.workingTree .) | sha256sum }}
+{{- end }}
+set -euo pipefail
+if ! command -v brew >/dev/null; then
+  echo "brew-bundle: brew not found, skipping (run install.sh first)" >&2
+  exit 0
+fi
+
+cat{{ range $files }} {{ joinPath $.chezmoi.workingTree . | quote }}{{ end }} | brew bundle install --file=-

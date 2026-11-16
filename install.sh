@@ -14,8 +14,6 @@ command -v brew >/dev/null 2>&1 || \
 
 source ~/.bashrc
 
-# Copy Brewfile
-echo '    Copying Brewfile' && cp ./Brewfile ~/Brewfile
 
 # Install chezmoi
 command -v chezmoi >/dev/null 2>&1 || \
