@@ -8,4 +8,4 @@ Collection of my essential configuration files for easy setup and customization 
 - Sometime you'll need to run `source ~/.bashrc` to reload
 - Optional: set zsh as default shell `chsh -s $(which zsh)`
 - Run chezmoi init - `chezmoi init https://github.com/aviadlevy/dotfiles.git`
-- Run `chezmoi apply` (also installs `Brewfile`, `Brewfile.only_mac` on macOS, and `Brewfile.ox` on a work machine)
+- Run `chezmoi apply` (also installs `Brewfile`, `Brewfile.only_mac` on macOS, and `Brewfile.work` on a work machine)

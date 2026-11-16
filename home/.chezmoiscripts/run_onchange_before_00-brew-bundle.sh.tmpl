@@ -1,9 +1,9 @@
 #!/bin/bash
 # Installs the repo-root Brewfiles: Brewfile everywhere, Brewfile.only_mac on macOS,
-# Brewfile.ox on a work machine. Reruns when any of them changes:
+# Brewfile.work on a work machine. Reruns when any of them changes:
 {{- $files := list "Brewfile" }}
 {{- if eq .chezmoi.os "darwin" }}{{ $files = append $files "Brewfile.only_mac" }}{{ end }}
-{{- if .work }}{{ $files = append $files "Brewfile.ox" }}{{ end }}
+{{- if .work }}{{ $files = append $files "Brewfile.work" }}{{ end }}
 {{- range $files }}
 # {{ . }} {{ include (joinPath $.chezmoi.workingTree .) | sha256sum }}
 {{- end }}
