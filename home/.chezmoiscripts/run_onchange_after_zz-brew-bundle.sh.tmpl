@@ -1,6 +1,7 @@
 #!/bin/bash
 # Installs the repo-root Brewfiles: Brewfile everywhere, Brewfile.only_mac on macOS,
-# Brewfile.work on a work machine. Reruns when any of them changes:
+# Brewfile.work on a work machine. Runs last (after the files and the other scripts), so a
+# failed install blocks nothing; a non-zero exit makes chezmoi retry it. Reruns when any Brewfile changes:
 {{- $files := list "Brewfile" }}
 {{- if eq .chezmoi.os "darwin" }}{{ $files = append $files "Brewfile.only_mac" }}{{ end }}
 {{- if .work }}{{ $files = append $files "Brewfile.work" }}{{ end }}
