@@ -27,11 +27,12 @@ jq '
   | .agentPushNotifEnabled = true
   | .skipAutoPermissionPrompt = true
   | .voiceEnabled = true
-  | .statusLine = {
+  # keep the agent-tank status line where its setup.js installed it (it wraps ccstatusline)
+  | .statusLine = (if (.statusLine.command // "" | contains("--agent-tank")) then .statusLine else {
       "type": "command",
       "command": "npx -y ccstatusline@latest",
       "padding": 0
-    }
+    } end)
   | .extraKnownMarketplaces = ({{ .claudeMarketplaces | toJson }} | map_values({source: {source: "github", repo: .}}))
   | .enabledPlugins = ({{ .claudePlugins | toJson }} | map({(.): true}) | add)
   # cmux skills stay installed (manaflow-ai/cmux via `npx skills`) for quick recovery, just hidden

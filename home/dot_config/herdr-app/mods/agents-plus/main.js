@@ -2,9 +2,13 @@
 
 import { View, div, image, svg } from "gpui-kit";
 import { v_flex, h_flex } from "gpui-base";
-import { agents, terminals, panes, focused, spaces, run, theme, shared, setShared, setAgentOrder, openOverlay, closeOverlay, props, window, layout, exec, settings } from "herdr";
+import { agents, terminals, panes, focused, spaces, run, theme, shared, setShared, setAgentOrder, openOverlay, closeOverlay, props, window, layout, exec, settings, readTextFile, home } from "herdr";
 
-const JIRA = "https://oxsecurity.atlassian.net/browse/";
+// Jira base URL from the work profile (kept out of this public repo); unset → ticket chips don't link.
+let jira = null;
+readTextFile(`${home()}/.agents/work-profile/work-profile.md`)
+  .then((md) => { jira = md?.match(/^\|\s*`jira\.server`\s*\|\s*`(https:\/\/[^`\s]+?)\/?`/m)?.[1] ?? null; })
+  .catch(() => {});
 const TICKET = /\b([A-Z][A-Z0-9]+-\d+)\b/i;
 // How long an MR lookup stays fresh: open MRs change (pipeline, approval, merge) by the minute;
 // merged and closed ones hardly at all. The 30 s redraw timer is what triggers the refetch.
@@ -182,7 +186,7 @@ export default class Agents extends View {
       .tooltip(tip)
       .on_click((_e, cx) => {
         cx.stop_propagation();
-        openUrl(url);
+        if (url) openUrl(url);
       })
       .when(Boolean(glyph), (el) => el.child(svg(glyph).size(11).flex_none()))
       .child(text);
@@ -207,7 +211,7 @@ export default class Agents extends View {
     // The same MR can come from two listed branches only by mistake; show it once.
     const seen = new Set();
     const line = (id) => h_flex().id(id).pl(indent).pr(8).pb(4).mt(-2).flex_none().gap(5).text_size(10.5).font_medium();
-    const tk = (ticket) => chip(`tk-${address}-${ticket}`, ticket, t.accent, JIRA + ticket, `Open ${ticket} in Jira`);
+    const tk = (ticket) => chip(`tk-${address}-${ticket}`, ticket, t.accent, jira && `${jira}/browse/${ticket}`, jira ? `Open ${ticket} in Jira` : ticket);
     // A ticket with MRs gets its own line, the MRs stacked beside it; bare tickets share one wrapping line.
     const withMrs = [...groups].filter(([, mrs]) => mrs.length);
     const bare = [...groups].filter(([ticket, mrs]) => ticket && !mrs.length).map(([ticket]) => ticket);
