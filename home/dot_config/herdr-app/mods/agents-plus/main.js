@@ -333,7 +333,7 @@ export default class Agents extends View {
         .when(Boolean(l), el => el.border_l(1.5).border_color(t.input))
         .when(l === "└" || l === "├", el => el.border_b(1.5).rounded_bl(6))))
       .when(Boolean(pic), el => el.child(div().mr(8).child(pic)))
-      .child(div().flex_1().truncate().text_color(on ? t.foreground : t.muted).child(k.name || k.template || k.program?.name || k.address))
+      .child(div().flex_1().truncate().text_color(on ? t.foreground : t.muted).child(this.kidTabNames?.get(k.address) || k.name || k.template || k.program?.name || k.address))
       .child(this.status(t, { status: st }, compact));
   }
 
@@ -422,6 +422,8 @@ export default class Agents extends View {
     const termOf = new Map(all.map((k) => [k.address, k]));
     const leads = leadPanes(allPanes);
     const tabs = new Map(spaces().flatMap(s => s.tabs).map(tab => [tab.id, tab]));
+    // A sub-agent in its own tab that someone named (tab.rename) reads by that name.
+    this.kidTabNames = new Map(allPanes.filter(p => p.terminal && tabs.get(p.tab)?.named).map(p => [p.terminal, tabs.get(p.tab).name]));
     const labels = new Map(list.map(a => {
       const tab = tabs.get(a.tab);
       const many = tabCounts.get(a.tab) > 1;
