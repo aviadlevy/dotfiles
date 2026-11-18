@@ -6,6 +6,9 @@
   costs less than a wrong direction. Point out recurring friction or a better workflow unprompted.
 - **Quality over token efficiency.** Keep judgment-heavy work on the strongest model, and finish
   work properly rather than trimming it to save tokens.
+- **IST.** State times in Israel time (`TZ=Asia/Jerusalem`, IST/IDT), converting the UTC
+  timestamps that logs, traces and APIs return (Datadog, Grafana, GitLab, Jira, Slack); give
+  another zone only when asked. Keep IDs, queries and quoted log lines verbatim.
 
 ## Evidence
 
