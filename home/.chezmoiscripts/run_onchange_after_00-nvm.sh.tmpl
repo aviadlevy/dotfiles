@@ -1,0 +1,7 @@
+#!/bin/bash
+# Installs or updates nvm with its official install script (Homebrew installs are unsupported upstream).
+# PROFILE=/dev/null: ~/.programlangrc already loads nvm, so the installer must not edit shell files.
+# Named 00- so it runs before playwright-cli; reruns when nvm releases a new version:
+# {{ $nvmVersion := (gitHubLatestRelease "nvm-sh/nvm").TagName }}{{ $nvmVersion }}
+set -euo pipefail
+curl -fsSL "https://raw.githubusercontent.com/nvm-sh/nvm/{{ $nvmVersion }}/install.sh" | PROFILE=/dev/null bash

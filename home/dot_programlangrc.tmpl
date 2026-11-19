@@ -1,5 +1,4 @@
-# enable after installing nvm - https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating
-{{ if stat (joinPath .chezmoi.homeDir ".nvm") }}
+# nvm itself comes from run_onchange_after_00-nvm.sh; every line below checks for its files at shell start.
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 # Sourcing nvm.sh costs ~2s, so the `default` alias's node goes straight onto PATH and nvm itself
 # loads on the first `nvm` call. An alias that is not a plain installed version (lts/*, node, a
@@ -17,7 +16,6 @@ export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || pr
   fi
 }
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-{{ end }}
 
 # pyenv configurations. enable after installaion - https://github.com/pyenv/pyenv?tab=readme-ov-file#installation
 {{ if lookPath "pyenv" }}
