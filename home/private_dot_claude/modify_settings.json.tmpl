@@ -14,7 +14,7 @@ jq '
         end
     );
   del(.model)
-  | .permissions.defaultMode = "{{ if .work }}auto{{ else }}default{{ end }}"
+  | .permissions.defaultMode = "auto"
 {{- if not .work }}
   | .attribution = {"commit": "", "pr": "", "sessionUrl": false}
 {{- end }}
