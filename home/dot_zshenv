@@ -1,0 +1,14 @@
+# Read by every zsh, interactive or not, so tools launched outside a terminal (agent hooks, IDEs) see these.
+
+[[ -r "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"
+[[ -d "$HOME/develop/flutter/bin" ]] && export PATH="$HOME/develop/flutter/bin:$PATH"
+
+# nvm's default node, without loading nvm (~/.zshrc's nvm plugin does that for interactive shells).
+# The alias ("v24", "24", "24.12.0") picks the newest matching install; one that matches none
+# ("lts/*", "node") falls back to the newest installed version.
+() {
+  local nvm=${NVM_DIR:-$HOME/.nvm} alias
+  [[ -r $nvm/alias/default ]] && alias=$(<$nvm/alias/default)
+  local -a bins=($nvm/versions/node/v${alias#v}(|.*)/bin(N/nOn) $nvm/versions/node/*/bin(N/nOn))
+  (( $#bins )) && export PATH="$bins[1]:$PATH"
+}
