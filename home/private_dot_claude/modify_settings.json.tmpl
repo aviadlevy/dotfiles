@@ -35,12 +35,14 @@ jq '
     } end)
   | .extraKnownMarketplaces = ({{ .claudeMarketplaces | toJson }} | map_values({source: {source: "github", repo: .}}))
   | .enabledPlugins = ({{ .claudePlugins | toJson }} | map({(.): true}) | add)
-  # cmux skills stay installed (manaflow-ai/cmux via `npx skills`) for quick recovery, just hidden
+  # cmux skills stay installed (manaflow-ai/cmux via `npx skills`) for quick recovery, just hidden.
+  # ship-local: the built-in /ship of Claude Code, which shadows ~/.claude/skills/ship.
   | .skillOverrides = ((.skillOverrides // {}) + {
       "cmux": "off",
       "cmux-browser": "off",
       "cmux-diagnostics": "off",
-      "cmux-workspace": "off"
+      "cmux-workspace": "off",
+      "ship-local": "off"
     })
   | .permissions.allow = ((.permissions.allow // []) + [
       "Bash(git log*)",
