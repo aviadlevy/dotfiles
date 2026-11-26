@@ -482,7 +482,7 @@ export default class Agents extends View {
       return h_flex()
         .id(`ag-${a.address}`)
         .px(8)
-        .h(30)
+        .h(full && more ? 48 : 30)
         .flex_none()
         .rounded(8)
         .items_center()
@@ -502,9 +502,13 @@ export default class Agents extends View {
             this.folded.has(a.address) ? this.folded.delete(a.address) : this.folded.add(a.address);
             cx.notify();
           })).child(pic)))
-        .child(h_flex().flex_1().min_w(0).gap(5).items_center()
-          .child(div().min_w(0).max_w(full && more ? 120 : 200).truncate().text_color(idle ? t.muted : t.foreground).child(name))
-          .when(full && Boolean(more), el => el.child(div().flex_1().min_w(0).truncate().text_color(t.dim).child(`\u00b7 ${more}`))))
+        // With the space name on top, the tab's title (auto-title's) gets a line of its own.
+        .child(full && more
+          ? v_flex().flex_1().min_w(0).gap(1)
+            .child(div().min_w(0).truncate().text_color(idle ? t.muted : t.foreground).child(name))
+            .child(div().min_w(0).truncate().text_size(12.5).text_color(t.dim).child(more))
+          : h_flex().flex_1().min_w(0).gap(5).items_center()
+            .child(div().min_w(0).max_w(200).truncate().text_color(idle ? t.muted : t.foreground).child(name)))
         .when(Boolean(machine), el => el.child(div().text_size(10).text_color(t.dim).child(machine)))
         .when(subs.length > 0, el => el.child(fold(a, subs)))
         .when(this.hovered === a.address, el => el.child(pin))
