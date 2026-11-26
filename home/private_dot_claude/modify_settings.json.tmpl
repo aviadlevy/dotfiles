@@ -36,7 +36,7 @@ jq '
   | .extraKnownMarketplaces = ({{ .claudeMarketplaces | toJson }} | map_values({source: {source: "github", repo: .}}))
   | .enabledPlugins = ({{ .claudePlugins | toJson }} | map({(.): true}) | add)
   # cmux skills stay installed (manaflow-ai/cmux via `npx skills`) for quick recovery, just hidden.
-  # ship-local: the built-in /ship of Claude Code, which shadows ~/.claude/skills/ship.
+  # ship-local: the built-in /ship of Claude Code. Off, it still holds the /ship name, so ours is /ship-it.
   | .skillOverrides = ((.skillOverrides // {}) + {
       "cmux": "off",
       "cmux-browser": "off",
@@ -90,5 +90,7 @@ jq '
     ] | map({serverName: .})) | unique)
   | .hooks = (.hooks // {})
   | ensure_bash_hook("PostToolUse"; "{{ .chezmoi.homeDir }}/.claude/skills/yoram/yoram-nudge.sh")
-  | ensure_bash_hook("PreToolUse"; "{{ .chezmoi.homeDir }}/.claude/skills/ship/require-ship.sh")
+  # The skill was renamed ship to ship-it (2026-11-26): drop the hook at its old path.
+  | .hooks.PreToolUse = [.hooks.PreToolUse[]? | select(any(.hooks[]?; .command == "{{ .chezmoi.homeDir }}/.claude/skills/ship/require-ship.sh") | not)]
+  | ensure_bash_hook("PreToolUse"; "{{ .chezmoi.homeDir }}/.claude/skills/ship-it/require-ship.sh")
 '

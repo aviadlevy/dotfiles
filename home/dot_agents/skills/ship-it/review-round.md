@@ -1,11 +1,11 @@
 # Auto-review round
 
-Run by the one-shot cron `ship` arms in its last step. Inputs: `<IID>` (the MR) and
+Run by the one-shot cron `ship-it` arms in its last step. Inputs: `<IID>` (the MR) and
 `<ROUND>` (1 to 5). Each round ends by rescheduling the next one or by stopping, using this
 prompt with the values filled in:
 
 ```
-Auto-review round <ROUND> of 5 on MR !<IID>: follow ~/.agents/skills/ship/review-round.md.
+Auto-review round <ROUND> of 5 on MR !<IID>: follow ~/.agents/skills/ship-it/review-round.md.
 ```
 
 ## Steps

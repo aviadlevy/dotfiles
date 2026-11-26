@@ -1,9 +1,9 @@
 ---
-name: ship
+name: ship-it
 description: "Use before opening any PR or MR, or when ready to ship: opens a PR or MR for personal repositories, or runs the Jira and GitLab delivery flow when a work profile is installed."
 ---
 
-# /ship — Delivery Flow
+# /ship-it — Delivery Flow
 
 ## Mode selection
 
@@ -172,7 +172,7 @@ glab mr create \
 
 Print the MR URL.
 
-**The merge belongs to a human.** `ship` stops at an open MR: no `glab mr merge`, no
+**The merge belongs to a human.** `ship-it` stops at an open MR: no `glab mr merge`, no
 `--auto-merge` / `--merge-when-pipeline-succeeds`, from this skill or any it invokes. Arming
 auto-merge *is* merging; it lands the MR unattended. Two MRs merged that way on 2026-09-15
 because "do not merge" was read as "do not merge *now*". Queueing is the author's call.
@@ -217,7 +217,7 @@ Arm both, then finish; neither blocks.
    notifies on success). Note the cron ID.
 2. **Review rounds** — one-shot `CronCreate` (`recurring: false`), 3 minutes out:
    ```
-   Auto-review round 1 of 5 on MR !<IID>: follow ~/.agents/skills/ship/review-round.md.
+   Auto-review round 1 of 5 on MR !<IID>: follow ~/.agents/skills/ship-it/review-round.md.
    ```
 
 Tell the user both job IDs, and that the crons are **session-only**: they die with this

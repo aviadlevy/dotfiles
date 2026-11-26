@@ -23,7 +23,7 @@ default below.
 | Role | Key | Default |
 |---|---|---|
 | task source | `orchestrate.task_source` | the tickets or issues the user names |
-| delivery skill | `orchestrate.delivery` | `ship` |
+| delivery skill | `orchestrate.delivery` | `ship-it` |
 | review bot | `orchestrate.review_bot` | none: the delivery skill's own review gate |
 | build artifact | `orchestrate.artifact` | a clean build of the MR's sha |
 | live-test network | `orchestrate.network` | local only |

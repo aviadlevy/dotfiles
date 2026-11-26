@@ -1,6 +1,6 @@
 #!/bin/sh
-# PreToolUse(Bash) guard: a PR/MR opens only through the ship skill.
-# Denies every Bash route to a new PR/MR unless this session (or this subagent) loaded `ship`.
+# PreToolUse(Bash) guard: a PR/MR opens only through the ship-it skill.
+# Denies every Bash route to a new PR/MR unless this session (or this subagent) loaded `ship-it`.
 # Without jq the guard allows everything: it is a nudge toward the skill, not a security boundary.
 . "$HOME/.agents/hooks/cmd-match.sh"
 
@@ -22,18 +22,18 @@ opens_pr || exit 0
 
 transcript=$(printf '%s' "$input" | jq -r '.transcript_path // ""')
 agent=$(printf '%s' "$input" | jq -r '.agent_id // ""')
-# A subagent must load ship itself; the parent having loaded it earlier, for another PR, does not count.
+# A subagent must load ship-it itself; the parent having loaded it earlier, for another PR, does not count.
 # transcript_path is the main session's; PreToolUse documents no agent_transcript_path, so fall back to
 # shortcut: the layout from the hooks docs' SubagentStop example; revisit if subagent PRs get denied.
 if [ -n "$agent" ]; then
   transcript=$(printf '%s' "$input" | jq -r --arg d "${transcript%.jsonl}/subagents/agent-${agent}.jsonl" '.agent_transcript_path // $d')
 fi
 
-# A Skill tool call, or the user typing /ship.
-grep -Eqs '"skill":"ship"|<command-name>/?ship</command-name>' "$transcript" && exit 0
+# A Skill tool call, or the user typing /ship-it.
+grep -Eqs '"skill":"ship-it"|<command-name>/?ship-it</command-name>' "$transcript" && exit 0
 
 jq -n '{hookSpecificOutput: {
   hookEventName: "PreToolUse",
   permissionDecision: "deny",
-  permissionDecisionReason: "PRs and MRs open through the ship skill. Invoke it now (Skill tool, skill: \"ship\") and follow its steps from the top: ticket, branch, commit, review gate, push, then it opens the PR/MR."
+  permissionDecisionReason: "PRs and MRs open through the ship-it skill. Invoke it now (Skill tool, skill: \"ship-it\") and follow its steps from the top: ticket, branch, commit, review gate, push, then it opens the PR/MR."
 }}'
