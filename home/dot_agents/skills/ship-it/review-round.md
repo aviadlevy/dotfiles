@@ -25,6 +25,9 @@ Auto-review round <ROUND> of 5 on MR !<IID>: follow ~/.agents/skills/ship-it/rev
      `approved_by[].user.username`. A review bot (username contains `coderabbit`, `baz` or `bot_`)
      there → stop: "MR !<IID>: approved by <bot>, 0 open threads; watcher off." Also report
      `approvals_left`, since a bot approval rarely satisfies the approval rule.
+   - CodeRabbit rate-limited (the Step 6b rate-limit grep of `address-mr-review` hits) → the MR is
+     unreviewed, not clean: follow Step 6b's wait-and-resume, then reschedule this prompt, same
+     `<ROUND>`. This check comes before the 60-minute stop.
    - MR created more than 60 minutes ago → stop: "No review comments on !<IID> after an hour;
      watcher off."
    - Otherwise reschedule this prompt unchanged, same `<ROUND>`, 3 minutes out.

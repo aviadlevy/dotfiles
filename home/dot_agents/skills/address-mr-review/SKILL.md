@@ -163,7 +163,7 @@ cat > /tmp/mr_reply.md <<'EOF'
 Fixed in <SHA>. <what changed and why>.
 EOF
 glab api --method POST "projects/:id/merge_requests/<IID>/discussions/<DISC_ID>/notes" \
-  --field "body=$(cat /tmp/mr_reply.md)"
+  --raw-field "body=$(cat /tmp/mr_reply.md)"
 ```
 
 **MR-level content** (findings with no inline thread, a failed pre-merge check, a roll-up worth
@@ -172,7 +172,7 @@ make it resolvable, so it cannot leave the MR with an unresolved thread:
 
 ```bash
 glab api --method POST "projects/:id/merge_requests/<IID>/notes" \
-  --field "body=$(cat /tmp/mr_reply.md)"
+  --raw-field "body=$(cat /tmp/mr_reply.md)"
 ```
 
 Skip it entirely when every finding already has an inline reply — a roll-up that repeats the inline

@@ -50,6 +50,11 @@ Fixed for every run:
   blocked action yourself is the same laundering.
 - Merging is the user's click.
 - Update `state.md` on every event.
+- **Queue every question once a worker exists.** Each one goes into the **user queue** (`state.md` →
+  Pending for the user) and into your reply as plain text; workers keep going on everything it does
+  not gate. The user may be away: queueing a question also sends one `PushNotification` naming it.
+  AskUserQuestion is only for step 2's question, before the first worker starts: a question dialog
+  blocks your terminal, and every worker's `hc send` to you is refused until it closes.
 
 ## Steps
 
@@ -92,13 +97,13 @@ merge first, a contract from another task), what is unclear, and its **pass crit
 [`verify.md`](verify.md): concrete observable numbers, or `no live test: <reason>` for docs, chores
 and test-only changes. A runtime change gets a live test by default.
 
-Ask the user one batched AskUserQuestion: the clarifications, the pass criteria, and the tasks to
-park. Done when every task is planned or parked and the frontier is written down.
+Queue one batch for the user (plain text, see Standing rules): the clarifications, the pass criteria,
+and the tasks to park. Done when every task is planned or parked and the frontier is written down.
 
 ### 4. Dispatch
 
 For each free worker, take the next frontier task (ask when the pick is a real choice), build its
-message from [`dispatch.md`](dispatch.md), and send it. Done when the message is sent, the roster
+message from [`dispatch.md`](dispatch.md) (every skill it names must exist in that worker's session), and send it. Done when the message is sent, the roster
 row names the task, and the MR table has a row for it.
 
 ### 5. Run the loop
@@ -127,9 +132,10 @@ permission rule `Bash(hc send:*)` to add, and read MR state from the workers' re
 ### 7. Report to the user
 
 Each report: the MR table (MR | ticket | owner | CI | review | live test | waiting on: a human,
-CI, the review bot, the user), each worker result in a few lines, then the batched questions, numbered,
-each with your recommendation first. Use one AskUserQuestion call for the batch. Window actions read
-"go to Herdr tab `<worker>`, type `<words>`".
+CI, the review bot, the user), each worker result in a few lines, then the user queue: every open
+question, numbered, each with your recommendation first, as plain text (see Standing rules). An answer
+closes its queue entry; the rest stay queued for the next report. Window actions read
+"go to Herdr tab `<worker>` (its title starts with `<repo> ›`), type `<words>`".
 
 ### 8. Compaction
 

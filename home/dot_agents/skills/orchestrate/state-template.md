@@ -1,6 +1,8 @@
 # Orchestration: <run-name>
 
 Rewrite each section in place to show the current state. Only **Decisions** is append-only.
+Every table's first column is unique across the whole file; a table you add (e.g. a landing table)
+prefixes its keys (`land !123`), so a row edit by key touches one table only.
 Secrets and customer data live in scratch; this file only names them on the cleanup list.
 After a compaction: read this file, then continue.
 The Herdr work-board mod reads the tables: a worker's Name is its hc `--name` when you created it,

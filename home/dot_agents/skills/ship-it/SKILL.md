@@ -83,7 +83,7 @@ Every existing ticket ends this step **assigned to `jira me`** and **on the acti
 
 ```bash
 jira me                                                               # note the email
-jira issue view <TICKET_ID> --plain --no-headers --columns ASSIGNEE,TYPE
+jira issue view <TICKET_ID> --raw | python3 -c "import sys,json; f=json.load(sys.stdin)['fields']; print((f.get('assignee') or {}).get('emailAddress'), f['issuetype']['name'])"
 jira issue assign <TICKET_ID> <email>                                 # when not already me
 jira sprint list --state active --table --plain --no-headers --columns ID,NAME,STATE
 ```
@@ -200,8 +200,8 @@ with [`jira-rest.md`](jira-rest.md).
 
 ## Step 8 — Code Review
 
-Skip when there is no `TICKET_ID`, or `jira issue view <TICKET_ID> --plain --no-headers --columns STATUS`
-already reads `jira.status.code_review` or `jira.status.done`. Otherwise:
+Skip when there is no `TICKET_ID`, or the ticket's `fields.status.name` (from
+`jira issue view <TICKET_ID> --raw`) already reads `jira.status.code_review` or `jira.status.done`. Otherwise:
 
 ```bash
 jira issue move <TICKET_ID> "<jira.status.code_review>"
