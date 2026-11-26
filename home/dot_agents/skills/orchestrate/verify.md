@@ -3,8 +3,9 @@
 You live-test every MR whose plan has pass criteria. The test runs the code CI built for the exact
 sha, with only its edges stubbed. The artifact and network rules come from the bindings.
 
-1. **Get the build artifact for the sha.** An expired login → hand the user the `! <login command>`
-   to run.
+1. **Get the build artifact for the sha.** Per-repo artifact quirks (tag source, platform, module
+   layout, import-time env) come from the `orchestrate.artifact` binding; read the repo's entry
+   first. An expired login → hand the user the `! <login command>` to run.
 2. **Extract and check it.** Copy it out into scratch. Confirm the entry point exists and starts:
    CI can ship an artifact that builds green and cannot run.
 3. **Build the harness.** Drive the real service code; stub only the edges (e.g. Redis, S3, a
