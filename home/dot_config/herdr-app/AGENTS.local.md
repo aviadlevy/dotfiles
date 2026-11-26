@@ -22,6 +22,8 @@
 - Redline (github.com/iampedii/herdr-redline @ cac2ee1): `mods/redline/`, global key `ctrl-shift-f`
   (its default `cmd-shift-f` is the person's `pane.zoom`, kept). Uses `glab`; review worktrees go in
   `~/.herdr/worktrees/`. Remove: delete the mod folder and the key.
+  Local change (re-apply after updating Redline): `launcher.js` `reviewOptions` adds a "Peer review"
+  option that starts Claude with `/peer-review <MR web_url>` as its first message.
 - Auto Title (github.com/kryptamine/herdr-auto-title v0.25.0): `mods/auto-title/` (popup, `cmd-alt-t`) plus
   a launchd service `io.github.kryptamine.herdr-auto-title` installed by hand (checksum-verified).
   Log: `~/Library/Logs/herdr-auto-title.log`. Checks GitHub daily for updates. Remove:
