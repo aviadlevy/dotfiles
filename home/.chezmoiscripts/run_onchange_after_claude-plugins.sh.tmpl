@@ -18,7 +18,7 @@ for plugin in "${wanted[@]}"; do
   claude plugin install "$plugin"
 done
 
-claude plugin list --json | jq -r '.[] | select(.scope == "user") | .id' |
+claude plugin list --json | jq -r '.[] | select(.scope == "user" and (.id | endswith("@builtin") | not)) | .id' |
   while read -r plugin; do
     if [[ ! " ${wanted[*]} " =~ " $plugin " ]]; then
       claude plugin uninstall "$plugin"
