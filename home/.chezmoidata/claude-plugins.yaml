@@ -4,6 +4,5 @@ claudeMarketplaces: # name → GitHub repo; claude-plugins-official is built in
   mattpocock: mattpocock/skills
   ponytail: DietrichGebert/ponytail
 claudePlugins:
-  - context7@claude-plugins-official
   - mattpocock-skills@mattpocock
   - ponytail@ponytail
