@@ -76,7 +76,7 @@ jq '
   | .deniedMcpServers = ((.deniedMcpServers // []) + ([
       "claude.ai Atlassian",
       "claude.ai Atlassian MCP",
-      "claude.ai DataDog",
+      "claude.ai Datadog",
       "claude.ai GitLab",
       "claude.ai Gmail",
       "claude.ai Google Calendar",
@@ -90,6 +90,7 @@ jq '
       "claude.ai Semrush",
       "claude.ai Zapier",
       "claude.ai amplemarket",
+      "claude.ai hibob",
       "claude.ai oliv.ai",
       "claude.ai Whimsical"
     ] | map({serverName: .})) | unique)
