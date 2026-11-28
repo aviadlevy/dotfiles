@@ -1,10 +1,8 @@
-#!/bin/sh
-# Merges personal Claude Code preferences into the existing settings.json,
-# preserving anything plugins/Claude wrote. Reads stdin, writes stdout.
-# Permission mode is per-machine (chezmoi `work` var): auto on the work laptop,
-# ask-every-time ("default") on the home laptop.
-# Claude attribution on commits and PRs is hidden at home and kept at work.
-jq '
+{{- /* jq program for ~/.claude/settings.json, run by private_dot_claude/modify_settings.json with
+     chezmoi's built-in jq (gojq), so every OS shares it with no sh or jq binary.
+     Merges personal Claude Code preferences into the existing settings, preserving anything
+     plugins/Claude wrote. Permission mode is per-machine (chezmoi `work` var). Claude attribution
+     on commits and PRs is hidden at home and kept at work. */ -}}
   # Appends a Bash hook for $event unless one already runs $cmd.
   def ensure_bash_hook($event; $cmd):
     .hooks[$event] = (
@@ -99,4 +97,3 @@ jq '
   # The skill was renamed ship to ship-it (2026-11-26): drop the hook at its old path.
   | .hooks.PreToolUse = [.hooks.PreToolUse[]? | select(any(.hooks[]?; .command == "{{ .chezmoi.homeDir }}/.claude/skills/ship/require-ship.sh") | not)]
   | ensure_bash_hook("PreToolUse"; "{{ .chezmoi.homeDir }}/.claude/skills/ship-it/require-ship.sh")
-'

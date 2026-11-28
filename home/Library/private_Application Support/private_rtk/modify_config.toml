@@ -1,9 +1,3 @@
-#!/bin/sh
-# Keep rtk's own config.toml (and the keys new rtk versions add); pin only [hooks] exclude_commands.
-want='exclude_commands = ["hc", "glab api", "git grep"]'
-awk -v want="$want" '
-/^\[/ { if (inhooks && !done) { print want; done = 1 } inhooks = ($0 == "[hooks]") }
-inhooks && /^exclude_commands[[:space:]]*=/ { if (!done) { print want; done = 1 } next }
-{ print }
-END { if (!done) { if (!inhooks) print "\n[hooks]"; print want } }
-'
+{{- /* chezmoi:modify-template */ -}}
+{{- /* rtk reads its config from the OS config dir; the content is in .chezmoitemplates/rtk-config.toml. */ -}}
+{{ includeTemplate "rtk-config.toml" . -}}

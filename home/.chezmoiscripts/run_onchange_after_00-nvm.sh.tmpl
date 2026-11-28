@@ -5,3 +5,12 @@
 # {{ $nvmVersion := (gitHubLatestRelease "nvm-sh/nvm").TagName }}{{ $nvmVersion }}
 set -euo pipefail
 curl -fsSL "https://raw.githubusercontent.com/nvm-sh/nvm/{{ $nvmVersion }}/install.sh" | PROFILE=/dev/null bash
+
+# A fresh machine gets the current LTS node as default, aliased to its plain version so
+# ~/.programlangrc's fast path (which skips sourcing nvm.sh) applies.
+export NVM_DIR="$HOME/.nvm"
+if [ ! -r "$NVM_DIR/alias/default" ]; then
+  set +u; . "$NVM_DIR/nvm.sh"
+  nvm install --lts
+  nvm alias default "$(nvm version lts/*)"
+fi

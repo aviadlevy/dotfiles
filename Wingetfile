@@ -1,0 +1,27 @@
+# Windows twin of Brewfile: one winget package ID per line. Installed by install-wingetfile.ps1
+# (install.ps1 before the first apply, then the zz-wingetfile script on every change).
+# Not on Windows: tmux (no build), zsh/p10k (PowerShell 7 + oh-my-posh instead).
+# Terminal: Herdr (installed by its own script, like on macOS).
+Microsoft.PowerShell
+Git.Git
+twpayne.chezmoi
+sharkdp.bat
+eza-community.eza
+sharkdp.fd
+junegunn.fzf
+GitHub.cli
+dandavison.delta
+jqlang.jq
+JesseDuffield.lazygit
+BurntSushi.ripgrep.MSVC
+rtk-ai.rtk
+vim.vim
+sxyazi.yazi
+ajeetdsouza.zoxide
+# Python and node managers: uv replaces pyenv, fnm replaces nvm.
+astral-sh.uv
+Schniz.fnm
+# Prompt and the Nerd Font Herdr and the prompt use on Windows (family "JetBrainsMono NFM";
+# Meslo, the macOS font, has no winget package).
+JanDeDobbeleer.OhMyPosh
+DEVCOM.JetBrainsMonoNerdFont

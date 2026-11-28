@@ -1,0 +1,10 @@
+# Installs the repo-root Wingetfiles (Windows twin of zz-brew-bundle): Wingetfile everywhere,
+# Wingetfile.work on a work machine. Runs last, so a failed install blocks nothing; a non-zero exit
+# makes chezmoi retry it. Reruns when either list changes:
+{{- $files := list "Wingetfile" }}
+{{- if .work }}{{ $files = append $files "Wingetfile.work" }}{{ end }}
+{{- range $files }}
+# {{ . }} {{ include (joinPath $.chezmoi.workingTree .) | sha256sum }}
+{{- end }}
+& {{ joinPath .chezmoi.workingTree "install-wingetfile.ps1" | squote }}{{ range $files }} {{ joinPath $.chezmoi.workingTree . | squote }}{{ end }}
+exit $LASTEXITCODE

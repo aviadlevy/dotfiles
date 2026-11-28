@@ -1,0 +1,21 @@
+# Installs playwright-cli (Windows twin of 00-playwright-cli.sh): global npm package under fnm's
+# default node, its agent skill into ~\.agents\skills (link-skills links it on), and Chromium.
+# Named 00- so it runs before link-skills; reruns when the CLI version changes:
+# fnm: {{ lookPath "fnm" }} (reruns once fnm exists, so node and npm can too)
+# {{ if lookPath "playwright-cli" }}{{ output "playwright-cli" "--version" | trim }}{{ end }}
+$ErrorActionPreference = 'Stop'
+$PSNativeCommandUseErrorActionPreference = $true
+{{ template "windows-path.ps1" }}
+if (Get-Command fnm -ErrorAction SilentlyContinue) {
+  fnm env --shell powershell | Out-String | Invoke-Expression
+  fnm use default
+}
+if (-not (Get-Command playwright-cli -ErrorAction SilentlyContinue)) {
+  if (-not (Get-Command npm -ErrorAction SilentlyContinue)) {
+    Write-Warning 'playwright-cli: npm not found, skipping (00-node installs it)'
+    exit 0
+  }
+  npm install -g @playwright/cli@latest
+}
+playwright-cli install --skills=agents --global
+playwright-cli install-browser chromium

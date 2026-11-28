@@ -1,3 +1,25 @@
+{{ if eq .chezmoi.os "windows" }}
+# Windows: PowerShell 7 + oh-my-posh instead of the zsh stack, .ps1 scripts instead of the bash ones.
+# Not ported: tmux, Ghostty and cmux (no Windows builds); vim config; herdr-auto-title (macOS paths).
+.chezmoiscripts/*.sh
+.zshrc
+.zshenv
+.p10k.zsh
+.customterminalrc
+.programlangrc
+.kubectl_aliases
+.vimrc
+.vim
+.oh-my-zsh
+.fzf-git.sh
+.config/ghostty
+.config/cmux
+.config/herdr-auto-title
+{{ else }}
+.chezmoiscripts/*.ps1
+.config/powershell
+AppData
+# In this branch only: a ! pattern beats any ignore, so on Windows it would undo the .oh-my-zsh one.
 !.oh-my-zsh/plugins
 {{ range .zshPlugins }}
 !.oh-my-zsh/plugins/{{ . }}
@@ -9,3 +31,14 @@
 .oh-my-zsh/plugins/**
 .oh-my-zsh/templates/**
 .oh-my-zsh/custom/themes/powerlevel10k/**/*.zwc
+{{ end }}
+{{ if ne .chezmoi.os "darwin" }}
+# macOS only: launchd agents, ~/Library app config, and the herdr notifier that posts macOS notifications.
+Library
+.local/bin/herdr-notify
+.chezmoiscripts/herdr-notify.sh
+{{ end }}
+{{ if ne .chezmoi.os "linux" }}
+# rtk reads ~/.config/rtk only on Linux (macOS: Library/Application Support, Windows: AppData/Roaming).
+.config/rtk
+{{ end }}

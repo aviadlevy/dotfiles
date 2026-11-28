@@ -1,0 +1,67 @@
+# PowerShell 7 profile (Windows twin of .zshrc + .customterminalrc). $PROFILE dot-sources this file
+# (.chezmoiscripts/run_once_after_pwsh-profile.ps1). Each block renders only when its tool exists,
+# so rerun `chezmoi apply` after installing one.
+$env:EDITOR = 'vim'
+$env:Path = "$HOME\.local\bin;$env:Path"
+# Predictions fail with an error when output is redirected (agent shells, scripts).
+if (-not [Console]::IsOutputRedirected) { Set-PSReadLineOption -PredictionSource History }
+{{- if lookPath "fnm" }}
+
+# node: fnm's default version, switching per .nvmrc / .node-version on cd.
+fnm env --use-on-cd --shell powershell | Out-String | Invoke-Expression
+{{- end }}
+{{- if lookPath "fzf" }}
+
+# ---- fzf (key bindings via PSFzf: Ctrl+T files, Ctrl+R history, Alt+C cd) ----
+$env:FZF_DEFAULT_COMMAND = 'fd --hidden --strip-cwd-prefix --exclude .git'
+$env:FZF_CTRL_T_COMMAND = $env:FZF_DEFAULT_COMMAND
+$env:FZF_ALT_C_COMMAND = 'fd --type=d --hidden --strip-cwd-prefix --exclude .git'
+if (Get-Module -ListAvailable PSFzf) {
+  Import-Module PSFzf
+  Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
+}
+{{- end }}
+{{- if lookPath "eza" }}
+
+# ---- eza (better ls) ----
+# Agent shells (CLAUDECODE=1) keep plain ls/cat/cd: eza writes ANSI into captures, bat hides errors, z is not cd.
+if (-not $env:CLAUDECODE) {
+  Remove-Item Alias:ls -Force -ErrorAction SilentlyContinue
+  function ls { eza --color=always --git --no-filesize --icons=always --no-time --no-user --no-permissions @args }
+}
+function ll { eza -a --color=always --long --git --icons=always --no-user @args }
+{{- end }}
+{{- if lookPath "bat" }}
+if (-not $env:CLAUDECODE) { Set-Alias -Name cat -Value bat -Option AllScope -Force }
+{{- end }}
+{{- if lookPath "zoxide" }}
+
+$env:_ZO_DOCTOR = 0
+Invoke-Expression (& { (zoxide init powershell | Out-String) })
+if (-not $env:CLAUDECODE) { Set-Alias -Name cd -Value z -Option AllScope -Force }
+{{- end }}
+{{- if lookPath "yazi" }}
+
+# ---- yazi: `y` changes into the directory yazi exits in ----
+$env:YAZI_CONFIG_HOME = "$HOME\.config\yazi"
+$env:YAZI_FILE_ONE = 'C:\Program Files\Git\usr\bin\file.exe'  # yazi's recommended file(1) on Windows
+function y {
+  $tmp = (New-TemporaryFile).FullName
+  yazi @args --cwd-file="$tmp"
+  $cwd = Get-Content -LiteralPath $tmp -Encoding UTF8
+  if ($cwd -and $cwd -ne $PWD.Path -and (Test-Path -LiteralPath $cwd -PathType Container)) {
+    Set-Location -LiteralPath (Resolve-Path -LiteralPath $cwd).Path
+  }
+  Remove-Item -LiteralPath $tmp
+}
+{{- end }}
+{{- if lookPath "uv" }}
+
+(& uv generate-shell-completion powershell) | Out-String | Invoke-Expression
+{{- end }}
+{{- if lookPath "oh-my-posh" }}
+
+# Prompt last: it wraps the prompt function. p10k's lean theme, as on macOS; a local file (a chezmoi
+# external), since a theme name or URL is downloaded on every shell start.
+oh-my-posh init pwsh --config "$HOME\.config\oh-my-posh\powerlevel10k_lean.omp.json" | Invoke-Expression
+{{- end }}

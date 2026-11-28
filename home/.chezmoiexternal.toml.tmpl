@@ -71,33 +71,10 @@
     stripComponents = 1
     refreshPeriod = "168h"
 
-{{- if .work }}
-
-{{- $kubectxVersion := (gitHubLatestRelease "ahmetb/kubectx").TagName }}
-[".local/bin/kubectx"]
-type = "archive-file"
-url = "https://github.com/ahmetb/kubectx/releases/download/{{ $kubectxVersion }}/kubectx_{{ $kubectxVersion }}_linux_{{ .uname_arch }}.tar.gz"
-path = "kubectx"
-
-[".oh-my-zsh/custom/plugins/my-completions/_kubectx.zsh"]
-type = "file"
-url = "https://github.com/ahmetb/kubectx/raw/{{ $kubectxVersion }}/completion/_kubectx.zsh"
-
-[".local/bin/kubens"]
-type = "archive-file"
-url = "https://github.com/ahmetb/kubectx/releases/download/{{ $kubectxVersion }}/kubens_{{ $kubectxVersion }}_linux_{{ .uname_arch }}.tar.gz"
-path = "kubens"
-
-[".oh-my-zsh/custom/plugins/my-completions/_kubens.zsh"]
-type = "file"
-url = "https://github.com/ahmetb/kubectx/raw/{{ $kubectxVersion }}/completion/_kubens.zsh"
-
-{{ end }}
-
-
-{{- if .work }}
-["my-work-skills"]
-    type = "git-repo"
-    url = "git@gitlab.com:aviadlevy.ox/my-work-skills.git"
-    refreshPeriod = "24h"
+{{- if eq .chezmoi.os "windows" }}
+{{- $ohMyPoshVersionTag := (gitHubLatestRelease "JanDeDobbeleer/oh-my-posh").TagName }}
+# The PowerShell prompt theme (Windows has no zsh/p10k): p10k's lean style, pinned to oh-my-posh's latest release.
+[".config/oh-my-posh/powerlevel10k_lean.omp.json"]
+    type = "file"
+    url = "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/{{ $ohMyPoshVersionTag }}/themes/powerlevel10k_lean.omp.json"
 {{- end }}

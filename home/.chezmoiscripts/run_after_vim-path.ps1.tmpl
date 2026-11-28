@@ -1,0 +1,25 @@
+# Puts Vim on the user PATH: its installer (winget's vim.vim) leaves its versioned folder off PATH,
+# and where that folder is depends on the install scope. Vim's own uninstall entry records it.
+# Runs every apply (cheap), so a Vim upgrade to a new vimNN folder is picked up.
+$ErrorActionPreference = 'Stop'
+{{ template "windows-user-path.ps1" }}
+$keys = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*', 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*'
+$vim = Get-ItemProperty $keys -ErrorAction SilentlyContinue | Where-Object { $_.DisplayName -like 'Vim *' -and $_.UninstallString } | Select-Object -First 1
+if (-not $vim) { exit 0 }  # not installed (yet): the Wingetfile import retries
+# UninstallString is the uninstaller in Vim's root (e.g. "...\Programs\Vim\uninstall-gui.exe" /S, args
+# included), and vim.exe is in a versioned subfolder of that root (vim92).
+if ($vim.UninstallString -notmatch '^"?(.+?\.exe)') { Write-Warning "vim-path: cannot read $($vim.UninstallString), skipping"; exit 0 }
+$root = Split-Path $Matches[1]
+# The layout differs by install scope (vim92\vim.exe, or vim.exe at the root): search, newest first.
+$exe = Get-ChildItem -LiteralPath $root -Filter vim.exe -Recurse -Depth 2 -File -ErrorAction SilentlyContinue |
+  Sort-Object FullName -Descending | Select-Object -First 1
+if (-not $exe) { Write-Warning "vim-path: no vim.exe under $root, skipping"; exit 0 }
+$dir = $exe.DirectoryName
+$entries = Get-UserPathEntries
+$expanded = @($entries | ForEach-Object { [Environment]::ExpandEnvironmentVariables($_) })
+# Drop an older Vim folder (vimNN), keep everything else; unchanged when only the current one is there.
+$kept = @(for ($i = 0; $i -lt $entries.Count; $i++) { if ($expanded[$i] -ne $dir -and $expanded[$i] -notmatch '\\Vim\\vim\d+\\?$') { $entries[$i] } })
+if ($expanded -notcontains $dir -or $kept.Count -ne $entries.Count - 1) {
+  Set-UserPathEntries ($kept + $dir)
+  Write-Host "vim-path: added $dir to the user PATH"
+}

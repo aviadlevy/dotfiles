@@ -1,0 +1,18 @@
+# Reconciles user-scope Claude Code plugins with .chezmoidata/claude-plugins.yaml (Windows twin of
+# claude-plugins.sh): adds the marketplaces, installs listed plugins, uninstalls unlisted user-scope ones.
+# Reruns when the list changes: {{ list .claudeMarketplaces .claudePlugins | toJson | sha256sum }}
+$ErrorActionPreference = 'Stop'
+$PSNativeCommandUseErrorActionPreference = $true
+{{ template "windows-path.ps1" }}
+if (-not (Get-Command claude -ErrorAction SilentlyContinue)) {
+  Write-Warning 'claude-plugins: claude CLI not found, skipping'
+  exit 0
+}
+$wanted = @({{ range $i, $p := .claudePlugins }}{{ if $i }}, {{ end }}{{ $p | squote }}{{ end }})
+{{ range $name, $repo := .claudeMarketplaces -}}
+claude plugin marketplace add {{ $repo | squote }}
+{{ end -}}
+foreach ($plugin in $wanted) { claude plugin install $plugin }
+claude plugin list --json | ConvertFrom-Json |
+  Where-Object { $_.scope -eq 'user' -and -not $_.id.EndsWith('@builtin') -and $_.id -notin $wanted } |
+  ForEach-Object { claude plugin uninstall $_.id }

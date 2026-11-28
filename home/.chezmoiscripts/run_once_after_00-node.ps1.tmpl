@@ -1,0 +1,12 @@
+# Installs the current LTS node as fnm's default (Windows twin of 00-nvm; fnm comes from the Wingetfile).
+# Named 00- so it runs before playwright-cli. Reruns once fnm exists (this line changes then):
+# fnm: {{ lookPath "fnm" }}
+$ErrorActionPreference = 'Stop'
+$PSNativeCommandUseErrorActionPreference = $true
+{{ template "windows-path.ps1" }}
+if (-not (Get-Command fnm -ErrorAction SilentlyContinue)) {
+  Write-Warning 'node: fnm not found, skipping (the Wingetfile installs it; the next chezmoi apply reruns this)'
+  exit 0
+}
+fnm install --lts
+fnm default lts-latest

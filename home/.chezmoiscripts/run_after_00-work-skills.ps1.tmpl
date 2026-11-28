@@ -1,0 +1,40 @@
+{{ if .work -}}
+# Windows twin of 00-work-skills.sh: clones workSkillsRepo (.chezmoidata/work.yaml) into
+# ~\my-work-skills, then refreshes it at most daily. With no SSH access yet it warns and skips, and
+# the first `chezmoi apply` after SSH is set up clones it. Runs before link-skills, by name.
+$repo = {{ .workSkillsRepo | squote }}
+$dir = "$HOME\my-work-skills"
+$sshHost = ($repo -split '@', 2)[-1].Split(':')[0]
+# BatchMode: fail instead of prompting. accept-new: trust the host key on first contact, refuse a changed one.
+$env:GIT_SSH_COMMAND = 'ssh -o BatchMode=yes -o ConnectTimeout=10 -o StrictHostKeyChecking=accept-new'
+
+function Exit-Warn([string]$Problem, [string]$Fix) {
+  Write-Warning "work-skills: $Problem`n$Fix"
+  exit 0
+}
+function Exit-NoSsh {
+  Exit-Warn "cannot clone $repo (git's error is above), so the work skills are NOT installed.`n   Usually this means no SSH access to $sshHost yet:" @"
+   1. Create a key (skip if you have one):  ssh-keygen -t ed25519
+   2. Add ~\.ssh\id_ed25519.pub to your account on $sshHost (Settings -> SSH keys)
+   3. Check access:                         ssh -T git@$sshHost
+   4. Rerun:                                chezmoi apply   (clones it then)
+"@
+}
+
+if (-not (Test-Path -LiteralPath $dir)) {
+  git clone -q $repo $dir
+  if ($LASTEXITCODE) { Exit-NoSsh }
+  exit 0
+}
+if (-not (Test-Path -LiteralPath "$dir\.git")) { Exit-Warn "$dir exists but is not a git clone; skipping." '   Move it away and rerun chezmoi apply.' }
+$current = git -C $dir remote get-url origin
+if ($current -ne $repo) {
+  Exit-Warn "$dir is a clone of $current, but workSkillsRepo is now $repo; skipping." "   Move the old clone away (e.g. Rename-Item $dir my-work-skills.old), then rerun chezmoi apply to clone the new one."
+}
+# Refresh at most daily: FETCH_HEAD's age is the time since the last pull.
+$fetched = Get-Item -LiteralPath "$dir\.git\FETCH_HEAD" -ErrorAction SilentlyContinue
+if (-not $fetched -or $fetched.LastWriteTime -lt (Get-Date).AddDays(-1)) {
+  git -C $dir pull -q --ff-only
+  if ($LASTEXITCODE) { Exit-Warn "could not update $dir (git's error is above); keeping the current checkout." '   Fix it (SSH access, network, or local changes), then rerun chezmoi apply.' }
+}
+{{ end -}}

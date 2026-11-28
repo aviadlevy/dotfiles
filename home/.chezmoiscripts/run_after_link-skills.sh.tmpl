@@ -32,7 +32,8 @@ prune_dangling() {
 mkdir -p "$agents" "$claude"
 {{- if .work }}
 link_skills "$HOME/my-work-skills" "$agents"
-link "$HOME/my-work-skills/work-profile" "$HOME/.agents/work-profile"
+# Absent until work-skills could clone it (no SSH access yet): link nothing rather than a dangling link.
+[ -d "$HOME/my-work-skills/work-profile" ] && link "$HOME/my-work-skills/work-profile" "$HOME/.agents/work-profile"
 {{- end }}
 link_skills "$agents" "$claude"
 prune_dangling "$agents"

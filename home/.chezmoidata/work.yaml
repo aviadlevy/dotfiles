@@ -1,0 +1,3 @@
+# Work machines clone this into ~/my-work-skills (.chezmoiscripts/run_after_00-work-skills.sh.tmpl).
+# Point it at another repo when changing jobs; the script then tells you to move the old clone away.
+workSkillsRepo: git@gitlab.com:aviadlevy.ox/my-work-skills.git
