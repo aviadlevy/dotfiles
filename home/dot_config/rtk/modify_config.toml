@@ -1,0 +1,3 @@
+{{- /* chezmoi:modify-template */ -}}
+{{- /* rtk reads its config from the OS config dir; the content is in .chezmoitemplates/rtk-config.toml. */ -}}
+{{ includeTemplate "rtk-config.toml" . -}}

@@ -1,0 +1,16 @@
+# Installs Claude Code with its official native installer (Windows twin of 00-claude-code.sh): into
+# ~\.local\bin, no admin, keeps itself current. Named 00- so it runs before claude-plugins.
+$ErrorActionPreference = 'Stop'
+{{ template "windows-user-path.ps1" }}
+
+# The installer leaves ~\.local\bin off PATH on Windows ("not in your PATH"); every terminal, Herdr
+# included, needs it in the user PATH, not only PowerShell's profile.
+$bin = "$HOME\.local\bin"
+$entries = Get-UserPathEntries
+if (($entries | ForEach-Object { [Environment]::ExpandEnvironmentVariables($_) }) -notcontains $bin) {
+  Set-UserPathEntries (@($bin) + $entries)
+}
+$env:Path = "$bin;$env:Path"  # this process too: the installer checks it
+
+if ((Get-Command claude -ErrorAction SilentlyContinue) -or (Test-Path "$bin\claude.exe")) { exit 0 }
+Invoke-RestMethod https://claude.ai/install.ps1 | Invoke-Expression

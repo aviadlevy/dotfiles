@@ -2,7 +2,7 @@
 # Checks the ship guard against hand-made hook inputs. Run from anywhere: sh tests/require-ship.test.sh
 set -u
 repo=$(cd "$(dirname "$0")/.." && pwd)
-hook="$repo/home/dot_agents/skills/ship/executable_require-ship.sh"
+hook="$repo/home/dot_agents/skills/ship-it/executable_require-ship.sh"
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
 
@@ -12,9 +12,9 @@ cp "$repo/home/dot_agents/hooks/cmd-match.sh" "$tmp/home/.agents/hooks/"
 
 mkdir -p "$tmp/none/subagents" "$tmp/loaded/subagents"
 echo '{"x":1}' > "$tmp/none.jsonl"
-echo '{"name":"Skill","input":{"skill":"ship"}}' > "$tmp/loaded.jsonl"
-echo '{"x":"<command-name>/ship</command-name>"}' > "$tmp/typed.jsonl"
-echo '{"name":"Skill","input":{"skill":"ship"}}' > "$tmp/none/subagents/agent-a1.jsonl"
+echo '{"name":"Skill","input":{"skill":"ship-it"}}' > "$tmp/loaded.jsonl"
+echo '{"x":"<command-name>/ship-it</command-name>"}' > "$tmp/typed.jsonl"
+echo '{"name":"Skill","input":{"skill":"ship-it"}}' > "$tmp/none/subagents/agent-a1.jsonl"
 echo '{"x":1}' > "$tmp/loaded/subagents/agent-a2.jsonl"
 
 fails=0

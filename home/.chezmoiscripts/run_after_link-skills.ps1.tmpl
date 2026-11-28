@@ -1,0 +1,37 @@
+# Windows twin of link-skills.sh: links skills into ~\.agents\skills (work) and on into ~\.claude\skills.
+# Directory junctions, not symlinks: they need neither admin nor Developer Mode.
+$ErrorActionPreference = 'Stop'
+$agents = "$HOME\.agents\skills"
+$claude = "$HOME\.claude\skills"
+
+function Set-Link([string]$Source, [string]$Target) {
+  $item = Get-Item -LiteralPath $Target -Force -ErrorAction SilentlyContinue
+  if ($item -and -not $item.LinkType) {
+    Write-Warning "link-skills: $Target is a real path, skipping"
+    return
+  }
+  if ($item) { $item.Delete() }  # removes the junction itself, never its target
+  New-Item -ItemType Junction -Path $Target -Target $Source | Out-Null
+}
+
+function Set-SkillLinks([string]$From, [string]$To) {
+  Get-ChildItem -LiteralPath $From -Directory -ErrorAction SilentlyContinue |
+    Where-Object { (Test-Path "$($_.FullName)\SKILL.md") -or (Test-Path "$($_.FullName)\skill.md") } |
+    ForEach-Object { Set-Link $_.FullName (Join-Path $To $_.Name) }
+}
+
+function Remove-DanglingLinks([string]$Dir) {
+  Get-ChildItem -LiteralPath $Dir -Force |
+    Where-Object { $_.LinkType -and -not (Test-Path -LiteralPath $_.LinkTarget) } |
+    ForEach-Object { $_.Delete() }
+}
+
+New-Item -ItemType Directory -Force -Path $agents, $claude | Out-Null
+{{- if .work }}
+Set-SkillLinks "$HOME\my-work-skills" $agents
+# Absent until work-skills could clone it (no SSH access yet): link nothing rather than a dangling link.
+if (Test-Path "$HOME\my-work-skills\work-profile") { Set-Link "$HOME\my-work-skills\work-profile" "$HOME\.agents\work-profile" }
+{{- end }}
+Set-SkillLinks $agents $claude
+Remove-DanglingLinks $agents
+Remove-DanglingLinks $claude

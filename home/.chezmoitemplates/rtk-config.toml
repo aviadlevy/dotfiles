@@ -1,0 +1,3 @@
+{{- /* rtk's config.toml: keep rtk's own keys (and the ones new rtk versions add), pin only
+     [hooks] exclude_commands. Called from each OS's modify_config.toml; current file on stdin. */ -}}
+{{- .chezmoi.stdin | fromToml | setValueAtPath "hooks.exclude_commands" (list "hc" "glab api" "git grep") | toToml -}}

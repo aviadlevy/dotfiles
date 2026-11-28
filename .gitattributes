@@ -1,0 +1,2 @@
+# chezmoi copies files byte for byte: keep LF everywhere, even under core.autocrlf=true on Windows.
+* text=auto eol=lf

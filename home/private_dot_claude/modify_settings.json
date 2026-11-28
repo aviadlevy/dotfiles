@@ -1,0 +1,4 @@
+{{- /* chezmoi:modify-template */ -}}
+{{- /* The merge lives in .chezmoitemplates/claude-settings.jq; the current file arrives on stdin. */ -}}
+{{- $current := .chezmoi.stdin | default "{}" | fromJson -}}
+{{- index (jq (includeTemplate "claude-settings.jq" .) $current) 0 | toPrettyJson "  " -}}

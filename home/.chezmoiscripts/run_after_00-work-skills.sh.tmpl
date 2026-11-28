@@ -1,0 +1,43 @@
+{{ if .work -}}
+#!/bin/bash
+# Clones the work skills repo into ~/my-work-skills, then refreshes it at most daily; link-skills
+# (runs next, by name) links its skills. Runs on every apply, so with no SSH access yet it warns
+# and skips, and the first `chezmoi apply` after SSH is set up clones it.
+set -uo pipefail
+repo={{ .workSkillsRepo | quote }}
+dir="$HOME/my-work-skills"
+host=${repo#*@}
+host=${host%%:*}
+# BatchMode: fail instead of prompting for a passphrase or password. accept-new: trust the host
+# key on first contact (a fresh machine has no known_hosts), refuse if it changes later.
+export GIT_SSH_COMMAND="ssh -o BatchMode=yes -o ConnectTimeout=10 -o StrictHostKeyChecking=accept-new"
+
+warn() {
+  printf '\n⚠️  work-skills: %s\n%s\n\n' "$1" "$2" >&2
+  exit 0
+}
+no_ssh() {
+  warn "cannot clone $repo (git's error is above), so the work skills are NOT installed.
+   Usually this means no SSH access to $host yet:" \
+"   1. Create a key (skip if you have one):  ssh-keygen -t ed25519
+   2. Add ~/.ssh/id_ed25519.pub to your account on $host (Settings → SSH keys)
+   3. Check access:                         ssh -T git@$host
+   4. Rerun:                                chezmoi apply   (clones it then)"
+}
+
+if [ ! -e "$dir" ]; then
+  git clone -q "$repo" "$dir" || no_ssh
+  exit 0
+fi
+[ -d "$dir/.git" ] || warn "$dir exists but is not a git clone; skipping." "   Move it away and rerun chezmoi apply."
+current=$(git -C "$dir" remote get-url origin 2>/dev/null)
+if [ "$current" != "$repo" ]; then
+  warn "$dir is a clone of $current, but workSkillsRepo is now $repo; skipping." \
+"   Move the old clone away (e.g. mv $dir $dir.old), then rerun chezmoi apply to clone the new one."
+fi
+# Refresh at most daily: FETCH_HEAD's age is the time since the last pull.
+if [ -z "$(find "$dir/.git/FETCH_HEAD" -mmin -1440 2>/dev/null)" ]; then
+  git -C "$dir" pull -q --ff-only ||
+    warn "could not update $dir (git's error is above); keeping the current checkout." "   Fix it (SSH access, network, or local changes), then rerun chezmoi apply."
+fi
+{{ end -}}

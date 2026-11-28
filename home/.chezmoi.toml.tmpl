@@ -2,10 +2,20 @@
 {{- $email := promptStringOnce . "email" "Email address" -}}
 {{- $username := promptStringOnce . "username" "Username" -}}
 
+# Remembers where install.sh ran from, so a clone outside ~/.local/share/chezmoi keeps working.
+sourceDir = {{ .chezmoi.workingTree | quote }}  # the clone root; .chezmoi.sourceDir adds .chezmoiroot's home/
+
+{{- if eq .chezmoi.os "windows" }}
+
+# -NoProfile keeps a slow or broken profile out of every script; Bypass skips the execution policy.
+[interpreters.ps1]
+	command = "pwsh"
+	args = ["-NoLogo", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File"]
+{{- end }}
+
 [data]
 	email = {{ $email | quote }}
 	username = {{ $username | quote }}
-	uname_arch = {{ output "uname" "-m" | trim | quote}}
 	work = {{ $work }}
 	zshPlugins = ["git", "zsh-autosuggestions", "zsh-syntax-highlighting",  "zsh-completions", "sudo", "copypath", "copyfile", "jsontools", "docker", "kubectl", "ollama"]
 

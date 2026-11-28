@@ -1,0 +1,24 @@
+# Windows twin of Brewfile.work. No winget package: acli, pup, grpcurl, jira-cli, poppler, kube-fzf,
+# git-filter-repo, libmagic. Not ported: the VS Code extensions (Settings Sync carries them).
+Anomaly.OpenCode
+Amazon.AWSCLI
+Gyan.FFmpeg
+GLab.GLab
+GoLang.Go
+Graphviz.Graphviz
+Helm.Helm
+ImageMagick.ImageMagick
+# kubectl comes with OrbStack on macOS; nothing provides it on Windows.
+Kubernetes.kubectl
+ahmetb.kubectx
+7zip.7zip
+AquaSecurity.Trivy
+MikeFarah.yq
+# Apps (casks on macOS)
+Anthropic.Claude
+MongoDB.Compass.Full
+Ngrok.Ngrok
+Ollama.Ollama
+PostgreSQL.pgAdmin
+SlackTechnologies.Slack
+Microsoft.VisualStudioCode

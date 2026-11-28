@@ -5,6 +5,10 @@
 # Named 00- so it runs before link-skills; reruns when the CLI version changes:
 # {{ if lookPath "playwright-cli" }}{{ output "playwright-cli" "--version" | trim }}{{ end }}
 set -euo pipefail
+# chezmoi inherits the caller's PATH: on the first apply, nvm's node is not on it yet.
+if ! command -v npm >/dev/null && [ -s "$HOME/.nvm/nvm.sh" ]; then
+  set +u; . "$HOME/.nvm/nvm.sh"; set -u
+fi
 if ! command -v playwright-cli >/dev/null; then
   if ! command -v npm >/dev/null; then
     echo "playwright-cli: npm not found, skipping (install node with nvm first)" >&2

@@ -1,2 +1,5 @@
 # Renamed to ship-it (2026-11-26): /ship is taken by the built-in skill of Claude Code.
 .agents/skills/ship
+# Linux binaries the removed kubectx externals put first on PATH, even on macOS (brew installs kubectx now).
+.local/bin/kubectx
+.local/bin/kubens
